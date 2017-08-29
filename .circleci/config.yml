@@ -1,36 +1,76 @@
-# Ruby CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-ruby/ for more details
+# CircleCI 2.0 configuration file to build chromebrew pre-built binary packages for each PR
 #
 version: 2
 jobs:
-  build:
+  x86_64:
     docker:
       # specify the version you desire here
        - image: circleci/ruby:2.4.1-node-browsers
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-
     working_directory: ~/repo
-
     steps:
       - checkout
-
-      # run tests!
       - run:
-          name: run tests
+          name: build
           command: |
             mkdir /tmp/test-results
-            UPDATED_PACKAGES=$(git diff-tree --no-commit-id --name-only -r HEAD | grep packages/) || true
+            # retrieve package list modified from master to HEAD
+            UPDATED_PACKAGES=$(git diff-tree --no-commit-id --name-only master..HEAD | grep packages/) || true
+            # perform builds
             echo "crew build $UPDATED_PACKAGES" > /tmp/test-results/crew-commands.txt
             [ -z "$UPDATE_PACKAGES" ] && exit 0
-
-      # collect reports
       - store_test_results:
           path: /tmp/test-results
       - store_artifacts:
           path: /tmp/test-results
           destination: test-results
+
+  i686:
+    docker:
+      # specify the version you desire here
+       - image: circleci/ruby:2.4.1-node-browsers
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: build
+          command: |
+            mkdir /tmp/test-results
+            # retrieve package list modified from master to HEAD
+            UPDATED_PACKAGES=$(git diff-tree --no-commit-id --name-only master..HEAD | grep packages/) || true
+            # perform builds
+            echo "crew build $UPDATED_PACKAGES" > /tmp/test-results/crew-commands.txt
+            [ -z "$UPDATE_PACKAGES" ] && exit 0
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
+
+  armv7l:
+    docker:
+      # specify the version you desire here
+       - image: circleci/ruby:2.4.1-node-browsers
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: build
+          command: |
+            mkdir /tmp/test-results
+            # retrieve package list modified from master to HEAD
+            UPDATED_PACKAGES=$(git diff-tree --no-commit-id --name-only master..HEAD | grep packages/) || true
+            # perform builds
+            echo "crew build $UPDATED_PACKAGES" > /tmp/test-results/crew-commands.txt
+            [ -z "$UPDATE_PACKAGES" ] && exit 0
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
+workflows:
+  version: 2
+  build:
+    jobs:
+      - x86_64
+      - i686
+      - armv7l
