@@ -24,8 +24,9 @@ jobs:
           name: run tests
           command: |
             mkdir /tmp/test-results
-            ls > /tmp/test-results/ls-out
-            ls * > /tmp/test-results/ls-all-out
+            UPDATED_PACKAGES=$(git diff-tree --no-commit-id --name-only -r HEAD | grep packages/)
+            echo "crew build $UPDATED_PACKAGES" > /tmp/test-results/crew-commands.txt
+            [ -z "$UPDATE_PACKAGES" ] && exit 0
 
       # collect reports
       - store_test_results:
