@@ -3,29 +3,43 @@ require 'package'
 class Gdb < Package
   description 'GDB, the GNU Project debugger, allows you to see what is going on \'inside\' another program while it executes -- or what another program was doing at the moment it crashed.'
   homepage 'https://www.gnu.org/software/gdb/'
-  version '8.0'
-  source_url 'http://ftp.gnu.org/gnu/gdb/gdb-8.0.tar.xz'
-  source_sha256 'f6a24ffe4917e67014ef9273eb8b547cb96a13e5ca74895b06d683b391f3f4ee'
+  version '8.3'
+  source_url 'http://ftpmirror.gnu.org/gdb/gdb-8.3.tar.xz'
+  source_sha256 '802f7ee309dcc547d65a68d61ebd6526762d26c3051f52caebe2189ac1ffd72e'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/gdb-8.0-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/gdb-8.0-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/gdb-8.0-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/gdb-8.0-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/gdb-8.3-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/gdb-8.3-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/gdb-8.3-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/gdb-8.3-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '8612b39c8041b7ca574f0689f74a733c0ed168227495bcbc7ef2588dde5e314b',
-     armv7l: '8612b39c8041b7ca574f0689f74a733c0ed168227495bcbc7ef2588dde5e314b',
-       i686: 'fcaac403d13015720d0ef469545041a2bcff0b4d0f3bdba48380acfd8ac17385',
-     x86_64: 'f58b46880dd963748d604bca3cb9db9e108c64142e45d7df42b389acc0a085f2',
+    aarch64: 'cb31458449dbe3901b104a0e0629e9ef0cd219ea2783db736360d0176c321ca9',
+     armv7l: 'cb31458449dbe3901b104a0e0629e9ef0cd219ea2783db736360d0176c321ca9',
+       i686: '84bd95e06d5515647135ab5ce1f1c6a2956d5df8f324837dc26705fc28bcd07c',
+     x86_64: 'afb397d5022e72ea19e7d87fff5167b798f5063f59b1174dd56337837fdc7dea',
   })
 
-  depends_on "buildessential"
-  depends_on "ncurses"
-  depends_on "texinfo"
+  depends_on 'libx11'
+  depends_on 'six'
 
   def self.build
-    system "./configure", "--prefix=/usr/local"
+    system './configure',
+           '--with-x',
+           '--with-lzma',
+           '--enable-sim',
+           '--with-expat',
+           '--enable-tui',
+           '--with-python',
+           '--with-curses',
+           '--enable-shared',
+           '--with-system-zlib',
+           '--enable-64-bit-bfd',
+           '--enable-host-shared',
+           '--with-system-readline',
+           "--prefix=#{CREW_PREFIX}",
+           "--libdir=#{CREW_LIB_PREFIX}",
+           '--with-pkgversion=Chromebrew'
     system "make"
   end
 

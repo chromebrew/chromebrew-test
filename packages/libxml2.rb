@@ -3,27 +3,39 @@ require 'package'
 class Libxml2 < Package
   description 'Libxml2 is the XML C parser and toolkit developed for the Gnome project.'
   homepage 'http://xmlsoft.org/'
-  version '2.9.4-1'
-  source_url 'ftp://xmlsoft.org/libxml2/libxml2-2.9.4.tar.gz'
-  source_sha256 'ffb911191e509b966deb55de705387f14156e1a56b21824357cdf0053233633c'
+  version '2.9.9'
+  source_url 'https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.9.9/libxml2-v2.9.9.tar.bz2'
+  source_sha256 'd598e907b5f3efa992b65094f7113d9d8cc87238f32e4e1ddf8beff01b60a653'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libxml2-2.9.4-1-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libxml2-2.9.4-1-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libxml2-2.9.4-1-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libxml2-2.9.4-1-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libxml2-2.9.9-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libxml2-2.9.9-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libxml2-2.9.9-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libxml2-2.9.9-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '802105d36c6e2c241f2a21937adb98631e26f4f2cadd5fa33d1e4f6f190ff6ce',
-     armv7l: '802105d36c6e2c241f2a21937adb98631e26f4f2cadd5fa33d1e4f6f190ff6ce',
-       i686: '83f9175166eb10cfde77607fa0fdd902929d72fd7308efdf1b23ebe94e7d47c4',
-     x86_64: '0a34998228e43b4d88a480b88ce8095753a7be1902f87987377138e8429f8a1f',
+    aarch64: '8f7a474b5d0f8f800faa8e585662561dc4a0db3a494b2a949e96e63becf84262',
+     armv7l: '8f7a474b5d0f8f800faa8e585662561dc4a0db3a494b2a949e96e63becf84262',
+       i686: 'b248be959d940cb499e4692973865770a74fe1e10dfd7706cca36cc3ef3a0067',
+     x86_64: 'd2a31a3c95de67b23488340deea7025cdf953700e141a629de11711d17d3794a',
   })
+ 
+  depends_on 'zlibpkg'
 
   def self.build
-    system "./configure", "--libdir=#{CREW_LIB_PREFIX}",
-      "--enable-shared", "--disable-static", "--with-pic", "--without-python",
-      "--without-lzma", "--without-zlib"
+    system './autogen.sh'
+    system "./configure",
+      "--prefix=#{CREW_PREFIX}",
+      "--libdir=#{CREW_LIB_PREFIX}",
+      "--enable-shared",
+      "--disable-static",
+      "--with-pic",
+      "--without-python",   # libxml2-python built in another package (libxml2_python)
+      "--without-lzma",
+      "--with-zlib",
+      "--with-icu",
+      "--with-threads",
+      "--with-history"
     system "make"
   end
 

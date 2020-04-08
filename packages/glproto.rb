@@ -1,11 +1,11 @@
 require 'package'
 
 class Glproto < Package
-  description 'The protocols for the X window system provide extended functionality for communication between a X client and the server.'
-  homepage 'https://x.org'
+  description 'This extension defines a protocol for the client to send 3D rendering commands to the X server.'
+  homepage 'https://github.com/freedesktop/glproto'
   version '1.4.17'
-  source_url 'https://www.x.org/archive/individual/proto/glproto-1.4.17.tar.gz'
-  source_sha256 '9d8130fec2b98bd032db7730fa092dd9dec39f3de34f4bb03ceb43b9903dbc96'
+  source_url 'https://github.com/freedesktop/glproto/archive/glproto-1.4.17.tar.gz'
+  source_sha256 'b419c969412ad5c02dd53a0169041766c151ef599bf58b8dad70686fa1001c58'
 
   binary_url ({
     aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/glproto-1.4.17-chromeos-armv7l.tar.xz',
@@ -14,14 +14,16 @@ class Glproto < Package
      x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/glproto-1.4.17-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '338528ba16b9bc296339d33f28de0d61d772f6918cdd048f2cb0ef6739cdbde5',
-     armv7l: '338528ba16b9bc296339d33f28de0d61d772f6918cdd048f2cb0ef6739cdbde5',
-       i686: 'a0f405296f44e1b8905c834b73d8730552a284fc6d0ad2ef7370b54a3e8386c5',
-     x86_64: '11f451888c66c6fd23612c3e0b3189f5fe3c12c8b288ce67f591c3cf2c97101c',
+    aarch64: 'a5b1a0f75c5196a5abba05c02f4bd89ca04436ea4af8570f4e1466c2f9979a74',
+     armv7l: 'a5b1a0f75c5196a5abba05c02f4bd89ca04436ea4af8570f4e1466c2f9979a74',
+       i686: '0571a3d7e5a2e8c1816da6ca42660fa196d716f312d75e7b9d9d2649ae1b2006',
+     x86_64: '8a473bec54cbe19e192fb65297f11b22c200b662351032f163ef1f34c7c73f8d',
   })
 
   def self.build
-    system "./configure"
+    system './autogen.sh'
+    system "./configure --prefix=#{CREW_PREFIX} --libdir=#{CREW_LIB_PREFIX}"
+    system 'make'
   end
 
   def self.install

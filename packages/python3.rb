@@ -3,49 +3,62 @@ require 'package'
 class Python3 < Package
   description 'Python is a programming language that lets you work quickly and integrate systems more effectively.'
   homepage 'https://www.python.org/'
-  version '3.6.0'
-  source_url 'https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tgz'
-  source_sha256 'aa472515800d25a3739833f76ca3735d9f4b2fe77c3cb21f69275e0cce30cb2b'
+  version '3.8.2'
+  source_url 'https://www.python.org/ftp/python/3.8.2/Python-3.8.2.tar.xz'
+  source_sha256 '2646e7dc233362f59714c6193017bb2d6f7b38d6ab4a0cb5fbac5c36c4d845df'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/python3-3.6.0-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/python3-3.6.0-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/python3-3.6.0-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/python3-3.6.0-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/python3-3.8.2-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/python3-3.8.2-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/python3-3.8.2-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/python3-3.8.2-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '69cd539510eaaf0dfbf101dbb8ee3b1f15985f948887ec9bc5158544fd37994f',
-     armv7l: '69cd539510eaaf0dfbf101dbb8ee3b1f15985f948887ec9bc5158544fd37994f',
-       i686: '69e79202b30ed23640619c2cc425d92df6e638b9cfb502e939fd33eb2c359d36',
-     x86_64: 'c50473d6a3d1b2e7c28943967549e08d61bc49e702469fb6509ef2191fc756f4',
+    aarch64: '24a9d5c66ecb9889fab72ee5173c051e3ccb915e29787913bd70829695f6bd46',
+     armv7l: '24a9d5c66ecb9889fab72ee5173c051e3ccb915e29787913bd70829695f6bd46',
+       i686: '562d85cd5741021b00beacf85d80db6d9fd11583b16aea367789bca062e7de4f',
+     x86_64: '6858a8d9e7c85f0261a1feb98c09237d969f9ae2f4bd039259842c5f9a2c4e33',
   })
 
-  depends_on 'bz2' => :build
-  depends_on 'xzutils' => :build
-  depends_on 'ncurses'
-  depends_on 'openssl' => :build
-  depends_on 'sqlite' => :build
-  depends_on 'zlibpkg'
+  depends_on 'bz2'
+  depends_on 'xzutils'
+  depends_on 'sqlite'
+  depends_on 'krb5'
+  depends_on 'libtirpc'
+
+  if ARGV[0] == 'install' || ARGV[0] == 'reinstall' || ARGV[0] == 'upgrade'
+    # Fix ImportError: cannot import name 'PackageFinder'.
+    # See https://stackoverflow.com/questions/59887436/importerror-cannot-import-name-packagefinder.
+    FileUtils.rm_rf Dir.glob("#{CREW_PREFIX}/lib/python3.8/site-packages/pip*")
+  end
 
   def self.build
-    # python requires to use /usr/local/lib, so leave as is but specify -rpath
-    system "./configure", "CPPFLAGS=-I/usr/local/include/ncurses -I/usr/local/include/ncursesw",
-      "LDFLAGS=-Wl,-rpath,#{CREW_PREFIX}/lib",
-      "--with-ensurepip=install", "--enable-shared"
-    system "make"
+    # IMPORTANT: Do not build with python3 already installed or pip3 will not be included.
+    # python requires /usr/local/lib, so leave as is but specify -rpath
+    system './configure', "CPPFLAGS=-I#{CREW_PREFIX}/include/ncurses -I#{CREW_PREFIX}/include/ncursesw",
+      "LDFLAGS=-Wl,-rpath,-L#{CREW_LIB_PREFIX}",
+      '--with-ensurepip=install', '--enable-shared'
+    system 'make'
   end
 
   def self.install
-    system "make", "DESTDIR=#{CREW_DEST_DIR}", "install"
+    system 'make', "DESTDIR=#{CREW_DEST_DIR}", 'install'
 
-    # remove static library
-    system "find #{CREW_DEST_DIR}/usr/local -name 'libpython*.a' -print | xargs -r rm"
+    # remove static libraries
+    system "find #{CREW_DEST_PREFIX} -name 'libpython*.a' -print | xargs -r rm"
 
     # create symbolic links in lib64 for other applications which use libpython
-    unless Dir.exist? "#{CREW_DEST_DIR}#{CREW_LIB_PREFIX}"
-      system "mkdir -p #{CREW_DEST_DIR}#{CREW_LIB_PREFIX}"
-      system "cd #{CREW_DEST_DIR}#{CREW_LIB_PREFIX}; ln -s ../lib/libpython*.so* ."
+    unless Dir.exist? "#{CREW_DEST_LIB_PREFIX}"
+      FileUtils.mkdir_p "#{CREW_DEST_LIB_PREFIX}"
+      system "cd #{CREW_DEST_LIB_PREFIX} && ln -s ../lib/libpython*.so* ."
     end
+  end
+
+  def self.postinstall
+    puts
+    puts "Upgrading pip...".lightblue
+    system 'pip3 install --upgrade pip'
+    puts
   end
 
   def self.check
@@ -70,6 +83,6 @@ class Python3 < Package
     # Using /tmp breaks test_distutils, test_subprocess
     # Proxy setting breaks test_httpservers, test_ssl,
     # test_urllib, test_urllib2, test_urllib2_localnet
-    system "TMPDIR=/usr/local/tmp http_proxy= https_proxy= ftp_proxy= make test"
+    #system "TMPDIR=#{CREW_PREFIX}/tmp http_proxy= https_proxy= ftp_proxy= make test"
   end
 end

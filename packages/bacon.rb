@@ -3,33 +3,34 @@ require 'package'
 class Bacon < Package
   description 'BaCon is a free BASIC to C translator for Unix-based systems.'
   homepage 'http://www.basic-converter.org/'
-  version '3.5.4'
-  source_url 'http://www.basic-converter.org/stable/bacon-3.5.4.tar.gz'
-  source_sha256 '7b1c72fd46daaa43d19e1bfac2f9bcd9decc5b8443d8f5640e903bfc35e122b9'
+  version '3.9.3'
+  source_url 'https://basic-converter.org/stable/bacon-3.9.3.tar.gz'
+  source_sha256 '7f907f4ede68704eefd076733f617438c4baba98e9a1e8676ea1a00c4f8476ae'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/bacon-3.5.4-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/bacon-3.5.4-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/bacon-3.5.4-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/bacon-3.5.4-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/bacon-3.9.3-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/bacon-3.9.3-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/bacon-3.9.3-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/bacon-3.9.3-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '3415da0b1303b42ef2b2b4385a9aec58f02ae237b05e857f4bbb1807290a5b41',
-     armv7l: '3415da0b1303b42ef2b2b4385a9aec58f02ae237b05e857f4bbb1807290a5b41',
-       i686: '2cf7f4c550c50898fbadeabb792e2dc22423532e20241967e193c97fd138d767',
-     x86_64: '023778b5d5ccbbd276bd97a49077633ca5c8c249778b0cfce2a720d74f0efc66',
+    aarch64: 'e3688910dbee42cea250706e85b73dc6970aceabb25b855f0d7729ee07421f66',
+     armv7l: 'e3688910dbee42cea250706e85b73dc6970aceabb25b855f0d7729ee07421f66',
+       i686: 'ed8ac51c3a7f75e27cca79c1fe050f65aa6a188a2b58898961df43a7855d60db',
+     x86_64: '4a5ac4797556651820de1081d7be92726d1c01be68f4945f4bc2e78790a1f599',
   })
 
   def self.build
-    system "./configure --prefix=/usr/local --disable-gui"
-    system 'sed -i "45s,/usr/share,/usr/local/share," Makefile'
-    system 'sed -i "46s,/usr/share,/usr/local/share," Makefile'
-
-    # force to compile in sequential since bacon Makefile doesn't work in parallel
-    system "make", "-j1"
+    system 'sed -i "s,/usr/share,\$\(DATADIR\)," Makefile.in'
+    system './configure',
+      "--prefix=#{CREW_PREFIX}",
+      "--libdir=#{CREW_LIB_PREFIX}",
+      '--disable-gui-fltk',
+      '--disable-gui-gtk'
+    system 'make', '-j1' # parallel builds don't work with bacon
   end
 
   def self.install
-    system "make", "DESTDIR=#{CREW_DEST_DIR}", "install"
+    system 'make', "DESTDIR=#{CREW_DEST_DIR}", 'install'
   end
 end

@@ -3,28 +3,28 @@ require 'package'
 class Whois < Package
   description 'Intelligent WHOIS client'
   homepage 'https://github.com/rfc1036/whois'
-  version '5.2.16'
-  source_url 'https://github.com/rfc1036/whois/archive/v5.2.16.tar.gz'
-  source_sha256 'd8204ca199329f14c33cb9f893b0f50918dbef34a6838317270e65c55ab32615'
+  version '5.5.2'
+  source_url 'https://github.com/rfc1036/whois/archive/v5.5.2.tar.gz'
+  source_sha256 '9e007306bc0a5e0da4fe9abd52bc79aa8202af5ee6e852fb4f130cf362340b40'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/whois-5.2.16-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/whois-5.2.16-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/whois-5.2.16-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/whois-5.2.16-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/whois-5.5.2-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/whois-5.5.2-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/whois-5.5.2-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/whois-5.5.2-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '6af8f5df827b4df623dcc9e6b8adc4d6c5627391cc4cc5a575db429e994c6264',
-     armv7l: '6af8f5df827b4df623dcc9e6b8adc4d6c5627391cc4cc5a575db429e994c6264',
-       i686: '0535b924068cb2be49b0d722969c8e7459c9d73998f32638a72db33ed9672674',
-     x86_64: '778b41edd15d5c6aad04168c5be30f160fae7d5030aa7a6f90b66117ac389486',
+    aarch64: 'e1fb23bf6dc47d2504f8452f33668599ab039b32bbe6b70c3b4cf0f9c529a424',
+     armv7l: 'e1fb23bf6dc47d2504f8452f33668599ab039b32bbe6b70c3b4cf0f9c529a424',
+       i686: '737063cadba182cd240e01a64b5380c781472877b7f2dfec91c33e9049dde4a2',
+     x86_64: 'b788ba9c31a33dcc7b3dafcb4984117527e1dd802994f05519631f75a14d4378',
   })
 
   depends_on 'gettext'
 
   def self.build
-    system "sed -i 's,prefix = /usr,prefix = /usr/local,' Makefile"
-    system "sed -i 's,prefix = /usr,prefix = /usr/local,' po/Makefile"
+    system "sed -i 's,prefix = /usr,prefix = #{CREW_PREFIX},' Makefile"
+    system "sed -i 's,prefix = /usr,prefix = #{CREW_PREFIX},' po/Makefile"
     system "sed -i 's,/share/,/,g' Makefile"
     system "sed -i 's,/share/,/,g' po/Makefile"
     system "sed -i 's,/share/,/,g' config.h"
@@ -32,13 +32,12 @@ class Whois < Package
   end
 
   def self.install
-    system "mkdir -p #{CREW_DEST_DIR}/usr/local/bin"
-    system "mkdir -p #{CREW_DEST_DIR}/usr/local/man/man1"
-    system "mkdir -p #{CREW_DEST_DIR}/usr/local/man/man5"
-    system "cp mkpasswd #{CREW_DEST_DIR}/usr/local/bin"
-    system "cp whois #{CREW_DEST_DIR}/usr/local/bin"
-    system "cp mkpasswd.1 #{CREW_DEST_DIR}/usr/local/man/man1"
-    system "cp whois.1 #{CREW_DEST_DIR}/usr/local/man/man1"
-    system "cp whois.conf.5 #{CREW_DEST_DIR}/usr/local/man/man5"
+    system "gzip -9 mkpasswd.1 whois.1 whois.conf.5"
+    system "install -Dm755 mkpasswd #{CREW_DEST_PREFIX}/bin/mkpasswd"
+    system "install -Dm755 whois #{CREW_DEST_PREFIX}/bin/whois"
+    system "install -Dm644 whois.conf #{CREW_DEST_PREFIX}/etc/whois.conf"
+    system "install -Dm644 mkpasswd.1.gz #{CREW_DEST_PREFIX}/man/man1/mkpasswd.1.gz"
+    system "install -Dm644 whois.1.gz #{CREW_DEST_PREFIX}/man/man1/whois.1.gz"
+    system "install -Dm644 whois.conf.5.gz #{CREW_DEST_PREFIX}/man/man5/whois.conf.5.gz"
   end
 end

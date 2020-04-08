@@ -3,32 +3,29 @@ require 'package'
 class Libx11 < Package
   description 'C interface to the X window system'
   homepage 'https://x.org'
-  version '1.6.5'
-  source_url 'https://www.x.org/archive/individual/lib/libX11-1.6.5.tar.gz'
-  source_sha256 '3abce972ba62620611fab5b404dafb852da3da54e7c287831c30863011d28fb3'
+  version '1.6.9'
+  source_url 'https://www.x.org/archive/individual/lib/libX11-1.6.9.tar.bz2'
+  source_sha256 '9cc7e8d000d6193fa5af580d50d689380b8287052270f5bb26a5fb6b58b2bed1'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libx11-1.6.5-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libx11-1.6.5-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libx11-1.6.5-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libx11-1.6.5-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libx11-1.6.9-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libx11-1.6.9-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libx11-1.6.9-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libx11-1.6.9-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '3f588e3893585ce07fecbb85e15bd0c4a7a94dd26c53878219d70c9f2252c16d',
-     armv7l: '3f588e3893585ce07fecbb85e15bd0c4a7a94dd26c53878219d70c9f2252c16d',
-       i686: '94ce79efe402015d08bfa95c5138324c8449828294f128f4129f4126401c3f18',
-     x86_64: '3122ccd64702d2d477dbb28f2351cb346cecdf19e9a562534974ca38eefaa19c',
+    aarch64: 'aa383fa7778a3ad424129ce6f0df6f793d66ba92e93910b900f460de3902acb6',
+     armv7l: 'aa383fa7778a3ad424129ce6f0df6f793d66ba92e93910b900f460de3902acb6',
+       i686: '3c44f4318aece50226c295b39ebc4f2f51d16eb4c13207135df5e11fb5005565',
+     x86_64: '6bf082987ab469c4ae7e69fe492922f2811cf6601fc1ffbbe9c62220a55265f0',
   })
 
-  depends_on 'kbproto'
+  depends_on 'xorg_proto'
   depends_on 'libxcb'
-  depends_on 'xproto'
-  depends_on 'inputproto'
-  depends_on 'xextproto'
   depends_on 'libxtrans'
   
   def self.build
-    system "./configure"
+    system "./configure --prefix=#{CREW_PREFIX} --libdir=#{CREW_LIB_PREFIX}"
     system "make"
   end
 

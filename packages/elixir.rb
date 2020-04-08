@@ -2,10 +2,10 @@ require 'package'
 
 class Elixir < Package
   description 'Elixir is a dynamic, functional language designed for building scalable and maintainable applications.'
-  homepage 'http://elixir-lang.org/'
-  version '1.5.1'
-  source_url 'https://github.com/elixir-lang/elixir/releases/download/v1.5.1/Precompiled.zip'
-  source_sha256 '84af6eb4cb68d0f60b3edf4e275eb024f8eb8cccae91b18c2bbbc4b70a88934f'
+  homepage 'https://elixir-lang.org/'
+  version '1.9.1-1'
+  source_url 'https://github.com/elixir-lang/elixir/releases/download/v1.9.1/Precompiled.zip'
+  source_sha256 '17e43cb1627a0fa5625bc370cec0964ad6471ef242f1549e316db73c0d94fcc6'
 
   binary_url ({
   })
@@ -13,17 +13,21 @@ class Elixir < Package
   })
 
   depends_on 'erlang'
-  depends_on 'unzip'
-
-  def self.build
-    # do noting
-  end
+  depends_on 'unzip' => :build
 
   def self.install
-    system "mkdir -p #{CREW_DEST_DIR}#{CREW_PREFIX}"
-    system "mkdir -p #{CREW_DEST_DIR}#{CREW_PREFIX}/share"
-    system "mv bin #{CREW_DEST_DIR}#{CREW_PREFIX}"
-    system "mv lib #{CREW_DEST_DIR}#{CREW_PREFIX}"
-    system "mv man #{CREW_DEST_DIR}#{CREW_PREFIX}/share"
+    # Remove unused files
+    FileUtils.rm 'man/common'
+    FileUtils.rm 'bin/mix.ps1'
+    FileUtils.rm 'bin/.DS_Store'
+    FileUtils.rm Dir.glob('bin/*.bat')
+    FileUtils.rm Dir.glob('man/*.1.in')
+    # Prepare destination directories
+    FileUtils.mkdir_p "#{CREW_DEST_LIB_PREFIX}"
+    FileUtils.mkdir_p "#{CREW_DEST_PREFIX}/share/man/man1"
+    # Add relevant files
+    FileUtils.cp_r 'bin/', "#{CREW_DEST_PREFIX}"
+    FileUtils.cp_r Dir.glob('lib/mix/lib/*'), "#{CREW_DEST_LIB_PREFIX}"
+    FileUtils.cp_r Dir.glob('man/*'), "#{CREW_DEST_PREFIX}/share/man/man1"
   end
 end

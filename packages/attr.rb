@@ -3,33 +3,34 @@ require 'package'
 class Attr < Package
   description 'Commands for Manipulating Filesystem Extended Attributes.'
   homepage 'http://savannah.nongnu.org/projects/attr'
-  version '2.4.47'
-  source_url 'http://download.savannah.gnu.org/releases/attr/attr-2.4.47.src.tar.gz'
-  source_sha256 '25772f653ac5b2e3ceeb89df50e4688891e21f723c460636548971652af0a859'
+  version '2.4.48-1'
+  source_url 'http://download.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz'
+  source_sha256 '5ead72b358ec709ed00bbf7a9eaef1654baad937c001c044fe8b74c57f5324e7'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/attr-2.4.47-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/attr-2.4.47-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/attr-2.4.47-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/attr-2.4.47-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/attr-2.4.48-1-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/attr-2.4.48-1-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/attr-2.4.48-1-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/attr-2.4.48-1-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '082b73f0a150d15c3c9648ad28295f01ac73424c8d32d9b6cda8b7337954dc7c',
-     armv7l: '082b73f0a150d15c3c9648ad28295f01ac73424c8d32d9b6cda8b7337954dc7c',
-       i686: 'da6b9cd56ea0f0bc4396fb5db5ecb6056b1e09d5a678d8e3cce6f28bf6c7ed2d',
-     x86_64: '1b941d8dc1f5bc0bb810d28b9db1c6e93422e961169c603c09d10ba14e7afe49',
+    aarch64: '28abf6ac96e7cc3a1ba2690781b26d855e2f545a408c5583bda3220a8985cbf1',
+     armv7l: '28abf6ac96e7cc3a1ba2690781b26d855e2f545a408c5583bda3220a8985cbf1',
+       i686: 'cc277ad1091fe6b3c5fcd81dd3894f6b24c021b8fe0daab772577cdd1f473ed5',
+     x86_64: '744f97cd27716fcb2f4cb127971e61744fda9ae499479480aef7f6fa5a3c60af',
   })
 
   depends_on 'gettext'
 
   def self.build
-    system "./configure --prefix=/usr/local --disable-static"
+    system "./configure",
+           "--prefix=#{CREW_PREFIX}",
+           "--libdir=#{CREW_LIB_PREFIX}",
+           "--disable-static"
     system "make"
   end
 
   def self.install
     system "make", "DESTDIR=#{CREW_DEST_DIR}", "install"
-    system "make", "DESTDIR=#{CREW_DEST_DIR}", "install-dev"
-    system "make", "DESTDIR=#{CREW_DEST_DIR}", "install-lib"
   end
 end

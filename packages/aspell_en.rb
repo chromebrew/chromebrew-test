@@ -2,22 +2,22 @@ require 'package'
 
 class Aspell_en < Package
   description 'English Aspell Dictionary'
-  homepage 'ftp://ftp.gnu.org/gnu/aspell/dict/0index.html'
-  version '2017.01.22-0'
-  source_url 'ftp://ftp.gnu.org/gnu/aspell/dict/en/aspell6-en-2017.01.22-0.tar.bz2'
-  source_sha256 '93c73fae3eab5ea3ca6db3cea8770715a820f1b7d6ea2b932dd66a17f8fd55e1'
+  homepage 'https://ftpmirror.gnu.org/aspell/dict/0index.html'
+  version '2019.10.06-0'
+  source_url 'https://ftpmirror.gnu.org/aspell/dict/en/aspell6-en-2019.10.06-0.tar.bz2'
+  source_sha256 '24334b4daac6890a679084f4089e1ce7edbe33c442ace776fa693d8e334f51fd'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/aspell_en-2017.01.22-0-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/aspell_en-2017.01.22-0-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/aspell_en-2017.01.22-0-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/aspell_en-2017.01.22-0-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/aspell_en-2019.10.06-0-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/aspell_en-2019.10.06-0-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/aspell_en-2019.10.06-0-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/aspell_en-2019.10.06-0-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: 'c6d97d026cc14813d7e056108c9078114b197664dea6f505d8c3306ba7dd0a26',
-     armv7l: 'c6d97d026cc14813d7e056108c9078114b197664dea6f505d8c3306ba7dd0a26',
-       i686: '747eee5456cb1009913a6f14751049c80dbc297a4e546bfd5c8627d5d7b55be9',
-     x86_64: '35c69030c15d7fb6a656c1562564026e666cbecdbbd6931c1a2eef95770ecc72',
+    aarch64: 'a738f11f46ba13405bd69ed228494415df6dd43c82639df3dee97a923bf6f43a',
+     armv7l: 'a738f11f46ba13405bd69ed228494415df6dd43c82639df3dee97a923bf6f43a',
+       i686: 'f0d6533f73c87c5a6dc8cd0c5e2db3cee262f208c10ec4aa7bb9af1f7b78a2ad',
+     x86_64: 'd346224eada4650b7bacc1146e3664800f2728287e184b16a6c95f46ba2cf805',
   })
 
   depends_on 'aspell'

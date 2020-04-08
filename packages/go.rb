@@ -3,69 +3,65 @@ require 'package'
 class Go < Package
   description 'Go is an open source programming language that makes it easy to build simple, reliable, and efficient software.'
   homepage 'https://golang.org/'
-  version '1.8.3-1'
-  source_url 'https://storage.googleapis.com/golang/go1.8.3.src.tar.gz'
-  source_sha256 '5f5dea2447e7dcfdc50fa6b94c512e58bfba5673c039259fd843f68829d99fa6'
+  version '1.14'
+  source_url 'https://dl.google.com/go/go1.14.src.tar.gz'
+  source_sha256 '6d643e46ad565058c7a39dac01144172ef9bd476521f42148be59249e4b74389'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/go-1.8.3-1-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/go-1.8.3-1-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/go-1.8.3-1-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/go-1.8.3-1-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: 'f0ed5baa1cc1ec4a393e3255ce5c6556ce29b17395fb660872a7fa7ee9dd7951',
-     armv7l: 'f0ed5baa1cc1ec4a393e3255ce5c6556ce29b17395fb660872a7fa7ee9dd7951',
-       i686: '5f34ab7487970b560a4eadc37a0308b3e50f9cc37bf5b9c933e8b033c06987c1',
-     x86_64: '87bbb19fa513377c1be217dd23897770c3c307fd22bf85e2202de24659b44129',
   })
 
   # Tests requires perl
   depends_on 'perl' => :build
   # go is required to build versions of go > 1.4
-  unless File.exist? "#{CREW_PREFIX}/lib/go/bin/go"
+  unless File.exist? "#{CREW_PREFIX}/share/go/bin/go"
     depends_on 'go_bootstrap' => :build
   end
 
   def self.build
     FileUtils.cd('src') do
       # install with go_bootstrap if go is not in the path
-      unless File.exist? "#{CREW_PREFIX}/lib/go/bin/go"
-        system "GOROOT_BOOTSTRAP=#{CREW_PREFIX}/lib/go_bootstrap/go \
+      unless File.exist? "#{CREW_PREFIX}/share/go/bin/go"
+        system "GOROOT_BOOTSTRAP=#{CREW_PREFIX}/share/go_bootstrap/go \
                 TMPDIR=#{CREW_PREFIX}/tmp \
-                GOROOT_FINAL=#{CREW_PREFIX}/lib/go \
-                ./make.bash"
+                GOROOT_FINAL=#{CREW_PREFIX}/share/go \
+                %s \
+                ./make.bash" % 'GOHOSTARCH=arm' if ARCH == 'aarch64'
       else
-        system "GOROOT_BOOTSTRAP=#{CREW_PREFIX}/lib/go \
+        system "GOROOT_BOOTSTRAP=#{CREW_PREFIX}/share/go \
                 TMPDIR=#{CREW_PREFIX}/tmp \
-                GOROOT_FINAL=#{CREW_PREFIX}/lib/go \
-                ./make.bash"
+                GOROOT_FINAL=#{CREW_PREFIX}/share/go \
+                %s \
+                ./make.bash" % 'GOHOSTARCH=arm' if ARCH == 'aarch64'
       end
     end
   end
 
   def self.install
-    dest = "#{CREW_DEST_DIR}#{CREW_PREFIX}/lib/"
+    dest = "#{CREW_DEST_PREFIX}/share/"
     system "mkdir", "-p", dest
     FileUtils.cp_r Dir.pwd, dest
 
-    # make a symbolic link for /usr/local/bin/{go,gofmt}
-    system "mkdir", "-p", "#{CREW_DEST_DIR}#{CREW_PREFIX}/bin"
-    system "ln", "-s", "#{CREW_PREFIX}/lib/go/bin/go", "#{CREW_DEST_DIR}#{CREW_PREFIX}/bin"
-    system "ln", "-s", "#{CREW_PREFIX}/lib/go/bin/gofmt", "#{CREW_DEST_DIR}#{CREW_PREFIX}/bin"
+    # make a symbolic link for #{CREW_PREFIX}/bin/{go,gofmt}
+    system "mkdir", "-p", "#{CREW_DEST_PREFIX}/bin"
+    system "ln", "-s", "#{CREW_PREFIX}/share/go/bin/go", "#{CREW_DEST_PREFIX}/bin"
+    system "ln", "-s", "#{CREW_PREFIX}/share/go/bin/gofmt", "#{CREW_DEST_PREFIX}/bin"
+  end
 
-    puts "--------"
-    puts "Installed Go for #{ARCH} in #{CREW_PREFIX}/lib/go"
-    puts ""
-    puts "To use `go run`:"
-    puts "\texport TMPDIR=#{CREW_PREFIX}/tmp"
-    puts ""
-    puts "To develop with `go`:"
-    puts "\tmkdir -p /usr/local/work/go"
-    puts "\tln -s /usr/local/work/go $HOME/go"
-    puts "\texport PATH=\"$HOME/go/bin:$PATH\""
-    puts "\texport TMPDIR=#{CREW_PREFIX}/tmp"
-    puts ""
+  def self.postinstall
+    puts
+    puts "Installed Go for #{ARCH} in #{CREW_PREFIX}/share/go".lightblue
+    puts
+    puts "To use `go run`, execute the following:".lightblue
+    puts "export TMPDIR=#{CREW_PREFIX}/tmp".lightblue
+    puts
+    puts "To develop with `go`, execute the following:".lightblue
+    puts "mkdir -p #{CREW_PREFIX}/work/go".lightblue
+    puts "ln -s #{CREW_PREFIX}/work/go $HOME/go".lightblue
+    puts "export PATH=\"$HOME/go/bin:$PATH\"".lightblue
+    puts "export TMPDIR=#{CREW_PREFIX}/tmp".lightblue
+    puts
   end
 
   def self.check

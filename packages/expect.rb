@@ -3,24 +3,24 @@ require 'package'
 class Expect < Package
   description 'Expect is a tool for automating interactive applications such as telnet, ftp, passwd, fsck, rlogin, tip, etc.'
   homepage 'http://expect.sourceforge.net/'
-  version '5.45-2'
-  source_url 'http://prdownloads.sourceforge.net/expect/expect5.45.tar.gz'
-  source_sha256 'b28dca90428a3b30e650525cdc16255d76bb6ccd65d448be53e620d95d5cc040'
+  version '5.45.4'
+  source_url 'http://downloads.sourceforge.net/project/expect/Expect/5.45.4/expect5.45.4.tar.gz'
+  source_sha256 '49a7da83b0bdd9f46d04a04deec19c7767bb9a323e40c4781f89caf760b92c34'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/expect-5.45-2-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/expect-5.45-2-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/expect-5.45-2-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/expect-5.45-2-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/expect-5.45.4-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/expect-5.45.4-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/expect-5.45.4-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/expect-5.45.4-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '50c9d4f9b030d97f5e11f514d6109b7a4ed1f5e978b5f42c3c3b41f94f437bff',
-     armv7l: '50c9d4f9b030d97f5e11f514d6109b7a4ed1f5e978b5f42c3c3b41f94f437bff',
-       i686: '5c10c93fbdcf5a6d8a1708ec4aea9b6daf12abebc5af23d2e3aaec6f051e2364',
-     x86_64: '65e9a83c45df552a9cb18f1ad3aced6169cef15eb4c7dc0535f39da22ac40f06',
+    aarch64: '7ec75d2e1b62aca345b82b88820a0a7e06cfc25163f39d324acb9a723420e819',
+     armv7l: '7ec75d2e1b62aca345b82b88820a0a7e06cfc25163f39d324acb9a723420e819',
+       i686: '4031c72d5516dff5a8655d820ff10095a47e2978fc00607235736d2d56380e45',
+     x86_64: 'ccdf8484e01563ffce6f5f112340948e06ce6a71a8cb3afc22d8cea0fb15c9fe',
   })
 
-  depends_on "tcl"
+  depends_on 'tcl'
 
   def self.build
     system "./configure", "--prefix=#{CREW_PREFIX}", "--libdir=#{CREW_LIB_PREFIX}"

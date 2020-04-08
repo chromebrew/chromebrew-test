@@ -3,25 +3,24 @@ require 'package'
 class Libtasn1 < Package
   description 'Libtasn1 is the ASN.1 library used by GnuTLS, GNU Shishi and some other packages.'
   homepage 'https://www.gnu.org/software/libtasn1/'
-  version '4.10-2'
-  source_url 'http://ftpmirror.gnu.org/libtasn1/libtasn1-4.10.tar.gz'
-  source_sha256 '681a4d9a0d259f2125713f2e5766c5809f151b3a1392fd91390f780b4b8f5a02'
+  version '4.13'
+  source_url 'https://ftpmirror.gnu.org/libtasn1/libtasn1-4.13.tar.gz'
+  source_sha256 '7e528e8c317ddd156230c4e31d082cd13e7ddeb7a54824be82632209550c8cca'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libtasn1-4.10-2-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libtasn1-4.10-2-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libtasn1-4.10-2-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libtasn1-4.10-2-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libtasn1-4.13-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libtasn1-4.13-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libtasn1-4.13-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libtasn1-4.13-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '2d0af019e1690fea1f7b277a008783713f4d3535f54bc04fb6cd785606006f66',
-     armv7l: '2d0af019e1690fea1f7b277a008783713f4d3535f54bc04fb6cd785606006f66',
-       i686: '3fb18df6adf7689a405a45b009a9f496250fa462ce27db5ab778edd725149416',
-     x86_64: '99e35599977b8cff5e69b6733b09c40f7a3cbf260699c3e427987ad8e841d6a2',
+    aarch64: '5b445e57a2882b410e6b8493c7997a34d01bec701f67eb0654aa92d114c61ed8',
+     armv7l: '5b445e57a2882b410e6b8493c7997a34d01bec701f67eb0654aa92d114c61ed8',
+       i686: '89e4bf3ab1bd6c561209dd3e1cf298af0a8498cdae6a0b3c270ecfc84392bc4a',
+     x86_64: '51009ec44bf8f51a3fc0432d78f14716b18d99eb99ad9b3b073079b5d168d1b9',
   })
 
   # bison, diff, cmp are required at compile-time
-  depends_on 'buildessential' => :build
   depends_on 'bison' => :build
   depends_on 'diffutils' => :build
 

@@ -3,25 +3,25 @@ require 'package'
 class Libjpeg < Package
   description 'JPEG is a free library for image compression.'
   homepage 'http://www.ijg.org/'
-  version '9.1-1'
-  source_url 'http://www.ijg.org/files/jpegsrc.v9a.tar.gz'
-  source_sha256 '3a753ea48d917945dd54a2d97de388aa06ca2eb1066cbfdc6652036349fe05a7'
+  version '9.0-d'
+  source_url 'https://www.ijg.org/files/jpegsrc.v9d.tar.gz'
+  source_sha256 '99cb50e48a4556bc571dadd27931955ff458aae32f68c4d9c39d624693f69c32'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libjpeg-9.1-1-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libjpeg-9.1-1-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libjpeg-9.1-1-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libjpeg-9.1-1-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libjpeg-9.0-d-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libjpeg-9.0-d-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libjpeg-9.0-d-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libjpeg-9.0-d-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '813fe8083f6f03909543b6f2feaf9e3cb0dc6b5704484cfbc56657630f45d227',
-     armv7l: '813fe8083f6f03909543b6f2feaf9e3cb0dc6b5704484cfbc56657630f45d227',
-       i686: '98b05d6ed65d1ed43ba8940db05275d819dc5574f85044d321b343d1c2a3e7b0',
-     x86_64: 'bd6832fa0b0d2ad611227c55e58927b7f88ecf69e4ff0d14d09699112a786a29',
+    aarch64: '1d0248976ed26493bf18231df01cb42eff81792440cf6cb517679b609804a44e',
+     armv7l: '1d0248976ed26493bf18231df01cb42eff81792440cf6cb517679b609804a44e',
+       i686: '3291fe256b305b2ee3de0fe8d4c455012ba92545ef3bfd155c25d5d86b8977c4',
+     x86_64: '6c166e006cbb47be453f41f1e6e6d452df0a6b0b8f3675e29d290f20bfdcf3ef',
   })
 
   def self.build
-    system "./configure --includedir=/usr/local/include CFLAGS=\" -fPIC\""
+    system "./configure --prefix=#{CREW_PREFIX} --libdir=#{CREW_LIB_PREFIX}"
     system "make"
   end
 

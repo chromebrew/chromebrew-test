@@ -3,21 +3,21 @@ require 'package'
 class Aria2 < Package
   description 'aria2 is a lightweight multi-protocol & multi-source, cross platform download utility operated in command-line. It supports HTTP/HTTPS, FTP, SFTP, BitTorrent and Metalink.'
   homepage 'https://aria2.github.io/'
-  version '1.32.0'
-  source_url 'https://github.com/aria2/aria2/releases/download/release-1.32.0/aria2-1.32.0.tar.xz'
-  source_sha256 '546e9194a9135d665fce572cb93c88f30fb5601d113bfa19951107ced682dc50'
+  version '1.35.0'
+  source_url 'https://github.com/aria2/aria2/releases/download/release-1.35.0/aria2-1.35.0.tar.xz'
+  source_sha256 '1e2b7fd08d6af228856e51c07173cfcf987528f1ac97e04c5af4a47642617dfd'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/aria2-1.32.0-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/aria2-1.32.0-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/aria2-1.32.0-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/aria2-1.32.0-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/aria2-1.35.0-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/aria2-1.35.0-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/aria2-1.35.0-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/aria2-1.35.0-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '428c55161bd2ac5250dc8572110e82b5d4264f4204d4a1ca274cd65991a94b24',
-     armv7l: '428c55161bd2ac5250dc8572110e82b5d4264f4204d4a1ca274cd65991a94b24',
-       i686: '0b32f8f5507083bfdb910e909be12857b2ef0df6fe1e715666ca84dd6caf23eb',
-     x86_64: '4bc29a0d11c5308880764f36d637ac77ab0c6cb550b2e9dc293a603351af8199',
+    aarch64: '96165af26f6187b56c2c96f7b40b7ec9ad21a96bc5799f216b1d285ef4936991',
+     armv7l: '96165af26f6187b56c2c96f7b40b7ec9ad21a96bc5799f216b1d285ef4936991',
+       i686: '76e9f7fff4da28c97c2706445486fa7559b76654c129ba229b00379b75d4ae1a',
+     x86_64: '60bbe750f1d5442d1fe0bee0644d70d4855a7cdd55c9e960c970d4817de5ed1b',
   })
 
   depends_on 'c_ares'
@@ -26,15 +26,23 @@ class Aria2 < Package
   depends_on 'libxml2'
   depends_on 'sqlite'
   depends_on 'zlibpkg'
+  depends_on 'ld_default' => :build
 
   def self.build
-    system './configure \
-           --without-libnettle \
-           --with-libgcrypt'
+    # Use the gold linker.
+    old_ld = `ld_default g`.chomp
+    system './configure',
+      "--prefix=#{CREW_PREFIX}",
+      "--libdir=#{CREW_LIB_PREFIX}",
+      '--without-libnettle',
+      '--with-libgcrypt',
+      '--disable-dependency-tracking'
     system 'make'
+    # Restore the original linker.
+    system 'ld_default', "#{old_ld}"
   end
 
   def self.install
-    system "make", "DESTDIR=#{CREW_DEST_DIR}", "install"
+    system 'make', "DESTDIR=#{CREW_DEST_DIR}", 'install'
   end
 end

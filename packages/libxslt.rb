@@ -3,31 +3,36 @@ require 'package'
 class Libxslt < Package
   description 'Libxslt is the XSLT C library developed for the GNOME project.'
   homepage 'http://xmlsoft.org/libxslt/'
-  version '1.1.29-1'
-  source_url 'http://xmlsoft.org/sources/libxslt-1.1.29.tar.gz'
-  source_sha256 'b5976e3857837e7617b29f2249ebb5eeac34e249208d31f1fbf7a6ba7a4090ce'
+  version '1.1.34'
+  source_url 'http://xmlsoft.org/sources/libxslt-1.1.34.tar.gz'
+  source_sha256 '98b1bd46d6792925ad2dfe9a87452ea2adebf69dcb9919ffd55bf926a7f93f7f'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libxslt-1.1.29-1-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libxslt-1.1.29-1-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libxslt-1.1.29-1-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libxslt-1.1.29-1-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libxslt-1.1.34-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libxslt-1.1.34-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libxslt-1.1.34-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libxslt-1.1.34-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '93810e7cb10c1a121bac5c86265631983381eeea027b4b0192a5b2fc5ee0192d',
-     armv7l: '93810e7cb10c1a121bac5c86265631983381eeea027b4b0192a5b2fc5ee0192d',
-       i686: '2f8547b35ca4907e7566ae9724d59fde47b93c88e511a6171fd285412dc1bb47',
-     x86_64: 'a8c584e1b00639cdaa70a73f103b42c9870918364733624a738d9b9a9c6d1822',
+    aarch64: 'df33590a8edfc86f29fada7d5b44e5914651259015e8df726603a2ffdc23bd42',
+     armv7l: 'df33590a8edfc86f29fada7d5b44e5914651259015e8df726603a2ffdc23bd42',
+       i686: 'd201b063ce46e40d354c3e89472aafd54fa524bd57e70b6ab03219e4f165bd93',
+     x86_64: '2ead1e30cb028f2f299056f8eea5bfb318f7346c6a65cfa4a891672560ed26bc',
   })
 
-  depends_on 'libxml2'
+  depends_on 'libxml2_python'
+  depends_on 'libgcrypt'
+  depends_on 'docbook_xsl'
 
   def self.build
-    system "./configure", "--without-python", "--disable-static", "--libdir=#{CREW_LIB_PREFIX}"
-    system "make"
+    system './configure',
+      "--prefix=#{CREW_PREFIX}",
+      "--libdir=#{CREW_LIB_PREFIX}",
+      '--disable-static'
+    system 'make'
   end
 
   def self.install
-    system "make", "DESTDIR=#{CREW_DEST_DIR}", "install"
+    system 'make', "DESTDIR=#{CREW_DEST_DIR}", 'install'
   end
 end

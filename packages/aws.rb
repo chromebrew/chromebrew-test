@@ -3,34 +3,55 @@ require 'package'
 class Aws < Package
   description 'The AWS CLI is an open source tool built on top of the AWS SDK for Python (Boto) that provides commands for interacting with AWS services.'
   homepage 'https://aws.amazon.com/documentation/cli/'
-  version '1.11.121'
-  source_url 'https://github.com/aws/aws-cli/archive/1.11.121.tar.gz'
-  source_sha256 'c667e77880a093d5ef3d635f19e7eab3cb0b7527f648d74e571fca8d170474a8'
+  version '1.17.13'
+  source_url 'https://github.com/aws/aws-cli/archive/1.17.13.tar.gz'
+  source_sha256 '4dc8ff38ca67341021f6e2971084d7ed8b87968443e089e758b5531f1381205f'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/aws-1.11.121-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/aws-1.11.121-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/aws-1.11.121-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/aws-1.11.121-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/aws-1.17.13-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/aws-1.17.13-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/aws-1.17.13-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/aws-1.17.13-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '1624bdbf0a968b17d45a85d4415c2240e15fc6c6e2afb8a406787a7e30a92b42',
-     armv7l: '1624bdbf0a968b17d45a85d4415c2240e15fc6c6e2afb8a406787a7e30a92b42',
-       i686: 'b9842c00b418b90f83102d7096495c3c7eca3d52b5f5ed88506ad53717bade23',
-     x86_64: '3fb6256209843cc0dcfaf81089516787427f77697e9b561b920eedf8aee864a3',
+    aarch64: '8f291de2ee2c9766dedb1b60ef178fdf4fa7554e3a305c6035decbce2661fb91',
+     armv7l: '8f291de2ee2c9766dedb1b60ef178fdf4fa7554e3a305c6035decbce2661fb91',
+       i686: 'ba5feb2b679177d47da9c08b482990be1259559bfa0cc005acfcaf429412a0f0',
+     x86_64: '1a52ec06dd1e471b64e14f27a14a783ca7488bb6016b245b20ef29d4cbceb833',
   })
 
-  depends_on 'python27' unless File.exists? '/usr/local/bin/python'
-  depends_on 'unzip'
+  depends_on 'setuptools' => :build
+  depends_on 'six'
+
+  def self.build
+    system "sed -i 's,-e git://github.com/boto/botocore.git@develop#egg=botocore,botocore==1.14.13,' requirements.txt"
+    system "sed -i 's,-e git://github.com/boto/s3transfer.git@develop#egg=s3transfer,s3transfer==0.3.3,' requirements.txt"
+  end
 
   def self.install
-    system "wget https://s3.amazonaws.com/aws-cli/awscli-bundle.zip"
-    system "unzip awscli-bundle.zip"
-    system "awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws"
-    system "chmod +x /usr/local/bin/aws"
-    system "mkdir -p #{CREW_DEST_DIR}/usr/local/aws"
-    system "mkdir -p #{CREW_DEST_DIR}/usr/local/bin"
-    system "cp -r /usr/local/aws #{CREW_DEST_DIR}/usr/local"
-    system "cp /usr/local/bin/aws #{CREW_DEST_DIR}/usr/local/bin"
+    system "pip install awscli==#{version} -r requirements.txt --prefix #{CREW_PREFIX} --root #{CREW_DEST_DIR}"
+    system "chmod +x #{CREW_DEST_PREFIX}/bin/aws"
+    system "chmod +x #{CREW_DEST_PREFIX}/bin/aws_completer"
+  end
+
+  def self.postinstall
+    puts
+    puts "Command completion support is available for the following shells:".lightblue
+    puts "bash zsh".lightblue
+    puts
+    puts "To add aws completion for bash, execute the following:".lightblue
+    puts "echo '# aws completion' >> ~/.bashrc".lightblue
+    puts "echo 'if [ -f #{CREW_PREFIX}/bin/aws_bash_completer ]; then' >> ~/.bashrc".lightblue
+    puts "echo '  source #{CREW_PREFIX}/bin/aws_bash_completer' >> ~/.bashrc".lightblue
+    puts "echo 'fi' >> ~/.bashrc".lightblue
+    puts "source ~/.bashrc".lightblue
+    puts
+    puts "To add aws completion for zsh, execute the following:".lightblue
+    puts "echo '# aws completion' >> ~/.zshrc".lightblue
+    puts "echo 'if [ -f #{CREW_PREFIX}/bin/aws_zsh_completer.sh ]; then' >> ~/.zshrc".lightblue
+    puts "echo '  source #{CREW_PREFIX}/bin/aws_zsh_completer.sh' >> ~/.zshrc".lightblue
+    puts "echo 'fi' >> ~/.zshrc".lightblue
+    puts "source ~/.zshrc".lightblue
+    puts
   end
 end

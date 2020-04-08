@@ -3,29 +3,33 @@ require 'package'
 class Libatomic_ops < Package
   description 'Atomic memory update operations portable implementation'
   homepage 'https://github.com/ivmai/libatomic_ops'
-  version '7.6.0'
-  source_url 'https://github.com/ivmai/libatomic_ops/releases/download/v7.6.0/libatomic_ops-7.6.0.tar.gz'
-  source_sha256 '8e2c06d1d7a05339aae2ddceff7ac54552854c1cbf2bb34c06eca7974476d40f'
+  version '7.6.10'
+  source_url 'https://github.com/ivmai/libatomic_ops/releases/download/v7.6.10/libatomic_ops-7.6.10.tar.gz'
+  source_sha256 '587edf60817f56daf1e1ab38a4b3c729b8e846ff67b4f62a6157183708f099af'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libatomic_ops-7.6.0-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libatomic_ops-7.6.0-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libatomic_ops-7.6.0-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libatomic_ops-7.6.0-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libatomic_ops-7.6.10-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libatomic_ops-7.6.10-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libatomic_ops-7.6.10-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libatomic_ops-7.6.10-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: 'ccbc4989f3ac6368de4f7c50dc419ec91c00cdcd3038fd42aa7bc05d93f666af',
-     armv7l: 'ccbc4989f3ac6368de4f7c50dc419ec91c00cdcd3038fd42aa7bc05d93f666af',
-       i686: '975680fbbd2aa398ee2cfeada7251e22c80595f8cf4a19b3b0fc9c43bcc07bd0',
-     x86_64: 'ec3cc2c64f4a730b931ca414a4d66f0789ff951c4d6f7e4bc549f0ca6ac72688',
+    aarch64: '0844abb0df05ad6c0f9b72b0cbb5e20bb51e4d8c8e9889e44a146aa38693d3ff',
+     armv7l: '0844abb0df05ad6c0f9b72b0cbb5e20bb51e4d8c8e9889e44a146aa38693d3ff',
+       i686: 'bf9998a0696908b73023aec0c8cfa08f25d083184355958d96b3f8655f510293',
+     x86_64: 'f5a1470043d79aca3925da878ff395d3bdcad179d3ed308f4aea4e0f55cf348c',
   })
 
   def self.build
-    system "./configure"
-    system "make"
+    system './configure',
+	   '--enable-shared',
+	   '--disable-static',
+	   "--prefix=#{CREW_PREFIX}",
+	   "--libdir=#{CREW_LIB_PREFIX}"
+    system 'make'
   end
 
   def self.install
-    system "make", "DESTDIR=#{CREW_DEST_DIR}", "install"
+    system 'make', "DESTDIR=#{CREW_DEST_DIR}", 'install'
   end
 end

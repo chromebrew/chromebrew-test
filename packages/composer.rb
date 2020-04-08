@@ -3,30 +3,39 @@ require 'package'
 class Composer < Package
   description 'Dependency Manager for PHP'
   homepage 'https://getcomposer.org/'
-  version '1.4.2'
-  source_url 'https://github.com/composer/composer/archive/1.4.2.tar.gz'
-  source_sha256 'b5ebe7bfddf6e05be9ab071d5d53dc49e7c9059a12238460ec86e2e6ab722e06'
+  version '1.10.1'
+  source_url 'https://github.com/composer/composer/archive/1.10.1.tar.gz'
+  source_sha256 '9d19d87a63a4927c20ed8e21dc2dd472eaf86deaf529917591557945464d5573'
 
-  binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/composer-1.4.2-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/composer-1.4.2-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/composer-1.4.2-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/composer-1.4.2-chromeos-x86_64.tar.xz',
-  })
-  binary_sha256 ({
-    aarch64: '21fc4be414c57b87f2fef310bd5686bf9afacf9b42d70eb965c3d2a2ebf8169d',
-     armv7l: '21fc4be414c57b87f2fef310bd5686bf9afacf9b42d70eb965c3d2a2ebf8169d',
-       i686: 'd9287ea3756417da202bc720f24a68942f0d8391e73ab2f403b4d28b243d5ec0',
-     x86_64: 'a4df579e211c787e5d92c6102a6f3ee1017de8813ed5fe3482b5be0b0633f27e',
-  })
+  depends_on 'php' unless File.exists? "#{CREW_PREFIX}/bin/php"
+  depends_on 'xdg_base'
 
-  depends_on 'php7' unless File.exists? '/usr/local/bin/php'
+  def self.preinstall
+    if Dir.exists?("#{HOME}/.config") && !File.symlink?("#{HOME}/.config")
+      # Save any existing configuration
+      system "cp -r #{HOME}/.config #{CREW_PREFIX}" unless Dir.empty? "#{HOME}/.config"
+    else
+      # Remove the symlink, if it exists
+      system "rm -f #{HOME}/.config"
+    end
+  end
 
   def self.install
     system "php -r \"copy('https://getcomposer.org/installer', 'composer-setup.php');\""
-    abort 'Checksum mismatch. :/ Try again.'.lightred unless Digest::SHA384.hexdigest( File.read('composer-setup.php') ) == '669656bab3166a7aff8a7506b8cb2d1c292f042046c5a994c43155c0be6190fa0355160742ab2e1c88d40d5be660b410'
-    system "php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=1.4.2"
-    system "mkdir -p #{CREW_DEST_DIR}/usr/local/bin"
-    system "cp /usr/local/bin/composer #{CREW_DEST_DIR}/usr/local/bin/composer"
+    system 'curl -Ls -o installer.sig https://composer.github.io/installer.sig'
+    abort 'Checksum mismatch. :/ Try again.'.lightred unless Digest::SHA384.hexdigest( File.read('composer-setup.php') ) == File.read('installer.sig')
+    system "mkdir -p #{CREW_DEST_PREFIX}/bin"
+    system "php composer-setup.php --install-dir=#{CREW_DEST_PREFIX}/bin --filename=composer --version=#{version}"
+    system "mkdir -p #{CREW_DEST_PREFIX}/.config"
+    system "cp -r #{HOME}/.config/composer #{CREW_DEST_PREFIX}/.config"
+    system "rm -rf #{HOME}/.config"
+    system "ln -s #{CREW_PREFIX}/.config #{HOME}/.config"
+  end
+
+  def self.postinstall
+    puts
+    puts "To finish the installation, execute the following:".lightblue
+    puts "echo 'export PATH=\$HOME/.config/composer/vendor/bin:\$PATH' >> ~/.bashrc && . ~/.bashrc".lightblue
+    puts
   end
 end

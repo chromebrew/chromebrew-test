@@ -3,27 +3,28 @@ require 'package'
 class Gox < Package
   description 'A dead simple, no frills Go cross compile tool.'
   homepage 'https://github.com/mitchellh/gox'
-  version '0.3.0'
-  source_url 'https://github.com/mitchellh/gox/archive/v0.3.0.tar.gz'
-  source_sha256 '29dc6b689f670a5444cc54cd9111549ccb01501901bc9197d0e1325a35157802'
+  version '0.4.0'
+  source_url 'https://github.com/mitchellh/gox/archive/v0.4.0.tar.gz'
+  source_sha256 '2df7439e9901877685ff4e6377de863c3c2ec4cde43d0ca631ff65d1b64774ad'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/gox-0.3.0-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/gox-0.3.0-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/gox-0.3.0-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/gox-0.3.0-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/gox-0.4.0-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/gox-0.4.0-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/gox-0.4.0-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/gox-0.4.0-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: 'fe6431f046bae54f6e7753cd2cf0c4f85087a004927da65845e184b82c54ab37',
-     armv7l: 'fe6431f046bae54f6e7753cd2cf0c4f85087a004927da65845e184b82c54ab37',
-       i686: '07f529c6d0ef5cd84d21a4ad37c370070d88bee02940ab5e9186ef1645bc513a',
-     x86_64: '7d43be449836eac9aaf368bbba2bd8571489a2cdeae1999ab7ac19d1d9a84d97',
+    aarch64: 'bd18d1ee7da98692c0aaa53e9016d16a7a2cb5ecf07236c340a2613b6837f087',
+     armv7l: 'bd18d1ee7da98692c0aaa53e9016d16a7a2cb5ecf07236c340a2613b6837f087',
+       i686: '70e31b0602ad26369b711a0f740391d43cd297b4a5d16c4d1a04bdb843f99fb0',
+     x86_64: 'd6d6c6c6d5aa168bea5c25a202c902d8b965040218a52291701c3e172d29c991',
   })
 
   depends_on 'go'
 
   def self.install
-    system "mkdir -p #{CREW_DEST_DIR}/usr/local/bin"
-    system "go build -o #{CREW_DEST_DIR}/usr/local/bin/gox"
+    system "go get github.com/mitchellh/iochan"
+    system "mkdir -p #{CREW_DEST_PREFIX}/bin"
+    system "go build -o #{CREW_DEST_PREFIX}/bin/gox"
   end
 end

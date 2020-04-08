@@ -3,21 +3,21 @@ require 'package'
 class Perl < Package
   description 'Perl 5 is a highly capable, feature-rich programming language with over 29 years of development.'
   homepage 'https://www.perl.org/'
-  version '5.24.1-2'
-  source_url 'http://www.cpan.org/src/5.0/perl-5.24.1.tar.gz'
-  source_sha256 'e6c185c9b09bdb3f1b13f678999050c639859a7ef39c8cad418448075f5918af'
+  version '5.26.1'
+  source_url 'http://www.cpan.org/src/5.0/perl-5.26.1.tar.gz'
+  source_sha256 'e763aa485e8dc1a70483dbe6d615986bbf32b977f38016480d68c99237e701dd'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/perl-5.24.1-1-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/perl-5.24.1-1-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/perl-5.24.1-1-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/perl-5.24.1-1-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/perl-5.26.1-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/perl-5.26.1-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/perl-5.26.1-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/perl-5.26.1-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: 'fe79dbe04afeddb1fe5f05aeaad6a5cad2cc7ebe5bebb81c0fa0adb6b3dc832a',
-     armv7l: 'fe79dbe04afeddb1fe5f05aeaad6a5cad2cc7ebe5bebb81c0fa0adb6b3dc832a',
-       i686: '3c00ae12d21edea1d4c97f35730c6047c1efcb286ffbaf80f06ba73f83151229',
-     x86_64: 'cdd728843bda0e1cdac2024ca6fd534e2ab167fefcd636a73b2aa2453b1c382e',
+    aarch64: 'd905b33e42f8825063eebe17a34bc8011ed9e7a88374373187d55f879453ccc4',
+     armv7l: 'd905b33e42f8825063eebe17a34bc8011ed9e7a88374373187d55f879453ccc4',
+       i686: 'a1394c4caafbca33de118521f850fa4162834f70c4bacbca9b576048a420ffb2',
+     x86_64: 'd6f71ac89fae67ce77d097075b52683cc5bb6367f87ad2dc86c383b4024b4186',
   })
 
   depends_on 'patch' => :build
@@ -25,7 +25,7 @@ class Perl < Package
   def self.build
     # Use system zlib and bzip2
     # Create shared library
-    # Install manual files into /usr/local/share/man/man* even if groff is not installed.
+    # Install manual files into #{CREW_PREFIX}/share/man/man* even if groff is not installed.
     system "BUILD_ZLIB=False BUILD_BZIP2=0 ./Configure -de -Duseshrplib -Dman1dir=#{CREW_PREFIX}/share/man/man1 -Dman3dir=#{CREW_PREFIX}/share/man/man3"
     system "make"
     system "curl -o cpanm https://cpanmin.us"

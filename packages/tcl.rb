@@ -3,38 +3,47 @@ require 'package'
 class Tcl < Package
   description 'Tcl (Tool Command Language) is a very powerful but easy to learn dynamic programming language, suitable for a very wide range of uses, including web and desktop applications, networking, administration, testing and many more.'
   homepage 'http://www.tcl.tk/'
-  version '8.6.6'
-  source_url 'http://downloads.sourceforge.net/tcl/tcl8.6.6-src.tar.gz'
-  source_sha256 'a265409781e4b3edcc4ef822533071b34c3dc6790b893963809b9fe221befe07'
+  version '8.6.10'
+  source_url 'https://downloads.sourceforge.net/project/tcl/Tcl/8.6.10/tcl8.6.10-src.tar.gz'
+  source_sha256 '5196dbf6638e3df8d5c87b5815c8c2b758496eb6f0e41446596c9a4e638d87ed'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/tcl-8.6.6-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/tcl-8.6.6-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/tcl-8.6.6-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/tcl-8.6.6-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/tcl-8.6.10-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/tcl-8.6.10-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/tcl-8.6.10-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/tcl-8.6.10-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '1f7cce2d63b32d0babf41ea2ed0df58946ab61fc675d3b278f0814f09ee1ac23',
-     armv7l: '1f7cce2d63b32d0babf41ea2ed0df58946ab61fc675d3b278f0814f09ee1ac23',
-       i686: 'baa85fce23a8ff3febfd85f70c6481a13c1485a13325b4601fcbc53277f0247f',
-     x86_64: '98aab819039aa52db6a192f5733b0ff7e8ce1cde0bb6b27ea54df23cd7c3cc62',
+    aarch64: '5591a9de473cfbb6102772d0ea4751ea65bf4d069573fc17f35b5e797a7db93c',
+     armv7l: '5591a9de473cfbb6102772d0ea4751ea65bf4d069573fc17f35b5e797a7db93c',
+       i686: '7dce88880df2dc338d5e2af96537f3ae031aae42865590a896de75b1704fb3aa',
+     x86_64: 'b841d095d897d29c491b98660957748af3216942e5bae44ec59a43c24bb608bf',
   })
 
   def self.build
-    FileUtils.chdir("unix") do
-      if `uname -m`.strip == "x86_64"
-        system "./configure --prefix=#{CREW_PREFIX} --libdir=#{CREW_LIB_PREFIX} --enable-64bit"
+    FileUtils.chdir('unix') do
+      if ARCH == 'x86_64'
+        system './configure',
+               "--prefix=#{CREW_PREFIX}",
+               "--libdir=#{CREW_LIB_PREFIX}",
+               "--mandir=#{CREW_PREFIX}/share/man",
+               '--enable-64bit'
       else
-        system "./configure --prefix=#{CREW_PREFIX} --libdir=#{CREW_LIB_PREFIX}"
+        system './configure',
+               "--prefix=#{CREW_PREFIX}",
+               "--libdir=#{CREW_LIB_PREFIX}",
+               "--mandir=#{CREW_PREFIX}/share/man",
+               '--disable-64bit'
       end
-      system "make"
+      system 'make'
     end
   end
 
   def self.install
-    FileUtils.chdir("unix") do
-      system "make", "DESTDIR=#{CREW_DEST_DIR}", "install"
-      system "make", "DESTDIR=#{CREW_DEST_DIR}", "install-private-headers"
+    FileUtils.chdir('unix') do
+      system 'make', "DESTDIR=#{CREW_DEST_DIR}", 'install'
+      system 'make', "DESTDIR=#{CREW_DEST_DIR}", 'install-private-headers'
+      FileUtils.ln_s "#{CREW_PREFIX}/bin/tclsh8.6", "#{CREW_DEST_PREFIX}/bin/tclsh"
     end
   end
 end

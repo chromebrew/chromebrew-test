@@ -3,25 +3,25 @@ require 'package'
 class Libbsd < Package
   description 'This library provides useful functions commonly found on BSD systems, and lacking on others like GNU systems, thus making it easier to port projects with strong BSD origins, without needing to embed the same code over and over again on each project.'
   homepage 'https://libbsd.freedesktop.org/wiki'
-  version '0.8.6'
-  source_url 'https://libbsd.freedesktop.org/releases/libbsd-0.8.6.tar.xz'
-  source_sha256 '467fbf9df1f49af11f7f686691057c8c0a7613ae5a870577bef9155de39f9687'
+  version '0.10.0'
+  source_url 'https://libbsd.freedesktop.org/releases/libbsd-0.10.0.tar.xz'
+  source_sha256 '34b8adc726883d0e85b3118fa13605e179a62b31ba51f676136ecb2d0bc1a887'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libbsd-0.8.6-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libbsd-0.8.6-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libbsd-0.8.6-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libbsd-0.8.6-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libbsd-0.10.0-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libbsd-0.10.0-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libbsd-0.10.0-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libbsd-0.10.0-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '6a2e1c9c9e508c7cb6de108a07c4ab58e7852c88fba2850ea079462b473d98c3',
-     armv7l: '6a2e1c9c9e508c7cb6de108a07c4ab58e7852c88fba2850ea079462b473d98c3',
-       i686: 'a3424c0ebed1554656778248aaf19f8551aad8d6268d7e5197976fd0df6da9fe',
-     x86_64: '9e939f8a7825ba19a5fcda1c07afe21cfb1c3f856ab0f0ec423c98d420c6b2da',
+    aarch64: '37a763df2252323db210cdb3ea216adaa5e04702975de7b3e13164d7b89f7b85',
+     armv7l: '37a763df2252323db210cdb3ea216adaa5e04702975de7b3e13164d7b89f7b85',
+       i686: '0cc3fad8e96ddf9cd0c501a48043f76c8e2d25a8ce2114912cefe0f39633a14c',
+     x86_64: '1eaed035917e2d3656a3e708777cc18f3f350ec495185bae77c3a8f7e254da52',
   })
 
   def self.build
-    system "./configure"
+    system "./configure --prefix=#{CREW_PREFIX} --libdir=#{CREW_LIB_PREFIX}"
     system "make"
   end
 

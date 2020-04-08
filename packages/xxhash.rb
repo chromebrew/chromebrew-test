@@ -2,31 +2,31 @@ require 'package'
 
 class Xxhash < Package
   description 'xxHash is an extremely fast non-cryptographic hash algorithm, working at speeds close to RAM limits.'
-  homepage 'http://cyan4973.github.io/xxHash/'
-  version '0.6.2'
-  source_url 'https://github.com/Cyan4973/xxHash/archive/v0.6.2.tar.gz'
-  source_sha256 'e4da793acbe411e7572124f958fa53b280e5f1821a8bf78d79ace972950b8f82'
+  homepage 'https://cyan4973.github.io/xxHash/'
+  version '0.7.3'
+  source_url 'https://github.com/Cyan4973/xxHash/archive/v0.7.3.tar.gz'
+  source_sha256 '952ebbf5b11fbf59ae5d760a562d1e9112278f244340ad7714e8556cbe54f7f7'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/xxhash-0.6.2-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/xxhash-0.6.2-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/xxhash-0.6.2-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/xxhash-0.6.2-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/xxhash-0.7.3-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/xxhash-0.7.3-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/xxhash-0.7.3-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/xxhash-0.7.3-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '80ff36655817a72e925863db7408ab312b5c4eb6f98f5d820db5d41c3a8336ec',
-     armv7l: '80ff36655817a72e925863db7408ab312b5c4eb6f98f5d820db5d41c3a8336ec',
-       i686: 'd9cad0c7b9f2d84b6c2805a53e5444bea8e8bf75470373d32811ca931bf9ff53',
-     x86_64: '28d9f2b452bc40df319ceb319a9360866228ba0f5fa7ede59805f3165c720e95',
+    aarch64: 'ebc5da796fed9aa28b1d1dfea223be7b82cb2b10a089a3fe17da44a526ce6d7f',
+     armv7l: 'ebc5da796fed9aa28b1d1dfea223be7b82cb2b10a089a3fe17da44a526ce6d7f',
+       i686: '5c4d9bf621e94373d0453f06a0a1fbd8f10002ba24f53355580eb52316653875',
+     x86_64: 'af56f28e9ef99aefed260fb19f931f9ddbe2ec1bdd22a90138e66f76ccbbe203',
   })
 
   def self.build
-    system "make"
+    system 'make', "PREFIX=#{CREW_PREFIX}"
   end
 
   def self.install
-    FileUtils.mkdir_p ["#{CREW_DEST_DIR}/usr/local/bin", "#{CREW_DEST_DIR}/usr/local/man/man1"]
-    FileUtils.cp "xxhsum", "#{CREW_DEST_DIR}/usr/local/bin/"
-    FileUtils.cp "xxhsum.1", "#{CREW_DEST_DIR}/usr/local/man/man1/"
+    FileUtils.mkdir_p ["#{CREW_DEST_PREFIX}/bin", "#{CREW_DEST_PREFIX}/man/man1"]
+    FileUtils.cp 'xxhsum', "#{CREW_DEST_PREFIX}/bin/"
+    FileUtils.cp 'xxhsum.1', "#{CREW_DEST_PREFIX}/man/man1/"
   end
 end

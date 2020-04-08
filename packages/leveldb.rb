@@ -3,34 +3,41 @@ require 'package'
 class Leveldb < Package
   description 'LevelDB is a fast key-value storage library written at Google that provides an ordered mapping from string keys to string values.'
   homepage 'https://leveldb.googlecode.com/'
-  version '1.20'
-  source_url 'https://github.com/google/leveldb/archive/v1.20.tar.gz'
-  source_sha256 'f5abe8b5b209c2f36560b75f32ce61412f39a2922f7045ae764a2c23335b6664'
+  version '1.22'
+  source_url 'https://github.com/google/leveldb/archive/1.22.tar.gz'
+  source_sha256 '55423cac9e3306f4a9502c738a001e4a339d1a38ffbee7572d4a07d5d63949b2'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/leveldb-1.20-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/leveldb-1.20-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/leveldb-1.20-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/leveldb-1.20-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/leveldb-1.22-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/leveldb-1.22-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/leveldb-1.22-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/leveldb-1.22-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '5b9e78ff11fdecae8b1a58b7724d1dc8481a5d85e72146a20df7fc6611d745b7',
-     armv7l: '5b9e78ff11fdecae8b1a58b7724d1dc8481a5d85e72146a20df7fc6611d745b7',
-       i686: '8aa1fe8444debfe38540b2b194f7ec2d1be224557291343aa54588d9fd01f805',
-     x86_64: 'd8a33a4ee417d1f95ca0ac9e4f50bb3e262a5334f3cf37ed0eae7cf15681476c',
+    aarch64: '362de886138261f127b60e31644ac80c627d9aba40e027c9d92978337c327915',
+     armv7l: '362de886138261f127b60e31644ac80c627d9aba40e027c9d92978337c327915',
+       i686: '1722af2fe019a295d63f72cb56fa75a69cc618a90e6013aef8d1a3572cc6c3de',
+     x86_64: 'a9a4f292b4d9ae782a7763b03cf62ae2bdd12944f5ccd82e5fd4c0780d74bdca',
   })
 
+  depends_on 'snappy'
+
   def self.build
-    system "make"
+    FileUtils.mkdir 'build'
+    FileUtils.cd('build') do
+      system "cmake .. -DCMAKE_BUILD_TYPE=Release \
+                       -DCMAKE_INSTALL_PREFIX=#{CREW_PREFIX} \
+                       -DCMAKE_INSTALL_LIBDIR=#{CREW_LIB_PREFIX} \
+                       -DBUILD_SHARED_LIBS=1"
+      system 'make'
+    end
   end
 
   def self.install
-    system "mkdir", "-p", "#{CREW_DEST_DIR}/usr/local/include"
-    system "mkdir", "-p", "#{CREW_DEST_DIR}/usr/local/lib"
-    system "cp", "-R", "include/leveldb", "#{CREW_DEST_DIR}/usr/local/include"
-    system "cp", "out-static/libleveldb.a", "#{CREW_DEST_DIR}/usr/local/lib"
-    system "cp", "out-shared/libleveldb.so.1.20", "#{CREW_DEST_DIR}/usr/local/lib"
-    system "cp", "-P", "out-shared/libleveldb.so.1", "#{CREW_DEST_DIR}/usr/local/lib"
-    system "cp", "-P", "out-shared/libleveldb.so", "#{CREW_DEST_DIR}/usr/local/lib"
+    system "make -C build DESTDIR=#{CREW_DEST_DIR} install"
+  end
+
+  def self.check
+    system 'make -C build test'
   end
 end

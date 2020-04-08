@@ -3,28 +3,36 @@ require 'package'
 class Freetype < Package
   description 'FreeType is a freely available software library to render fonts.'
   homepage 'https://www.freetype.org/'
-  version '2.8'
-  source_url 'http://download.savannah.gnu.org/releases/freetype/freetype-2.8.tar.bz2'
-  source_sha256 'a3c603ed84c3c2495f9c9331fe6bba3bb0ee65e06ec331e0a0fb52158291b40b'
+  version '2.10'
+  source_url 'https://namesdir.com/mirrors/nongnu/freetype/freetype-2.10.0.tar.gz'
+  source_sha256 '955e17244e9b38adb0c98df66abb50467312e6bb70eac07e49ce6bd1a20e809a'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/freetype-2.8-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/freetype-2.8-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/freetype-2.8-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/freetype-2.8-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/freetype-2.10-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/freetype-2.10-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/freetype-2.10-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/freetype-2.10-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '5ec39b82a7b680abf3a42cb460e885452e32f54c00f3e59fb7b284ab78cf7bd0',
-     armv7l: '5ec39b82a7b680abf3a42cb460e885452e32f54c00f3e59fb7b284ab78cf7bd0',
-       i686: 'f76398ca157ba8e311f750352e4914fa143c1b6f46f5d74f85f8658fc0afe906',
-     x86_64: '1015587a901348072e4315afdfdf9901ff2d7d2f671cfe54023407bc8836dcb6',
+    aarch64: '3cdfc1eae6ee52f0d3c046e2a3bc01d8383d830ea48cb2f84db94caced32b2a9',
+     armv7l: '3cdfc1eae6ee52f0d3c046e2a3bc01d8383d830ea48cb2f84db94caced32b2a9',
+       i686: 'b3a195210ba9bc95a863956c69218b99bdcac6a276b27648ff043d5e7bf64b39',
+     x86_64: '0c761037a91633e1371974ced873e59c1f847ead4416f338119761be1bbe21c7',
   })
 
   depends_on 'expat'
+  depends_on 'libpng'   # freetype needs zlib optionally. zlib is also the dependency of libpng
+  depends_on 'bz2'
+  depends_on 'harfbuzz'
 
   def self.build
-      system "./configure CFLAGS=\" -fPIC\""
-      system "make"
+	system "sed -i 's,/usr/include/freetype2,#{CREW_PREFIX}/include/freetype2,g' configure"
+    system "./configure \
+            CFLAGS=\" -fPIC\" \
+            --prefix=#{CREW_PREFIX} \
+            --libdir=#{CREW_LIB_PREFIX} \
+            --with-harfbuzz"
+    system "make"
   end
 
   def self.install

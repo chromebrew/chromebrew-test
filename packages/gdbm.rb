@@ -3,35 +3,38 @@ require 'package'
 class Gdbm < Package
   description 'GNU dbm is a set of database routines that use extensible hashing.'
   homepage 'https://www.gnu.org/software/gdbm/'
-  version '1.13'
-  source_url 'ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.13.tar.gz'
-  source_sha256 '9d252cbd7d793f7b12bcceaddda98d257c14f4d1890d851c386c37207000a253'
+  version '1.18.1'
+  source_url 'https://ftpmirror.gnu.org/gdbm/gdbm-1.18.1.tar.gz'
+  source_sha256 '86e613527e5dba544e73208f42b78b7c022d4fa5a6d5498bf18c8d6f745b91dc'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/gdbm-1.13-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/gdbm-1.13-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/gdbm-1.13-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/gdbm-1.13-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/gdbm-1.18.1-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/gdbm-1.18.1-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/gdbm-1.18.1-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/gdbm-1.18.1-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '5173374cf85d85db067e74762347b29221bf6b145bff4297491cab41716f90dd',
-     armv7l: '5173374cf85d85db067e74762347b29221bf6b145bff4297491cab41716f90dd',
-       i686: 'abea0445b1b6be0365aa76340676b39118c6b2de094ee0e21d391ad6fabcd0ef',
-     x86_64: 'c6d4f4a421a04df6c9e6e2d99cfecce673fd58788e378978b2bc8c7312e4d4a6',
+    aarch64: 'b7d1eefc792b5250b4a1e1c6cf7845cb965944c5f2f4468b63201e6dc7374d66',
+     armv7l: 'b7d1eefc792b5250b4a1e1c6cf7845cb965944c5f2f4468b63201e6dc7374d66',
+       i686: '60deef61ee53f9aab9a94767a8902ee29920302e113ca115567f3b2d428ae582',
+     x86_64: 'b52cde5502c9bf35fe485776d976d1a44a872e2ffee8964297ac2fe3ef0d064e',
   })
 
   depends_on 'readline'
 
   def self.build
-    system './configure', "--libdir=#{CREW_LIB_PREFIX}", '--disable-static', '--enable-shared', '--with-pic'
+    system './configure',
+           '--disable-static',
+           "--prefix=#{CREW_PREFIX}",
+           "--libdir=#{CREW_LIB_PREFIX}"
     system 'make'
   end
 
   def self.install
-    system "make", "DESTDIR=#{CREW_DEST_DIR}", "install"
+    system 'make', "DESTDIR=#{CREW_DEST_DIR}", 'install'
   end
 
   def self.check
-    system "make check"
+    system 'make', 'check'
   end
 end

@@ -2,29 +2,46 @@ require 'package'
 
 class Pciutils < Package
   description 'The PCI Utilities are a collection of programs for inspecting and manipulating configuration of PCI devices, all based on a common portable library libpci which offers access to the PCI configuration space on a variety of operating systems.'
-  homepage 'http://mj.ucw.cz/sw/pciutils/'
-  version '3.5.5'
-  source_url 'https://www.kernel.org/pub/software/utils/pciutils/pciutils-3.5.5.tar.xz'
-  source_sha256 '1d62f8fa192f90e61c35a6fc15ff3cb9a7a792f782407acc42ef67817c5939f5'
+  homepage 'https://mj.ucw.cz/sw/pciutils/'
+  version '3.6.2'
+  source_url 'https://www.kernel.org/pub/software/utils/pciutils/pciutils-3.6.2.tar.xz'
+  source_sha256 'db452ec986edefd88af0d222d22f6102f8030a8633fdfe846c3ae4bde9bb93f3'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/pciutils-3.5.5-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/pciutils-3.5.5-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/pciutils-3.5.5-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/pciutils-3.5.5-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/pciutils-3.6.2-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/pciutils-3.6.2-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/pciutils-3.6.2-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/pciutils-3.6.2-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: 'fb69cd22643e7aca50db2e799685a72b661911bba4f5355ecd93b990b4c588c8',
-     armv7l: 'fb69cd22643e7aca50db2e799685a72b661911bba4f5355ecd93b990b4c588c8',
-       i686: 'b192456ab12ce8c0ba998a4e5153669197831a667f038e6dcf437e3db16d7cbe',
-     x86_64: 'd65b94cefe4cf908fd9fec6d35710e8b35959c6aad7332bbc33d1cdd626043c1',
+    aarch64: 'f6e98ae7fdd796945dfc130eb256ee9d1aafe9c7e6a15bcc63a2ba4d77640b62',
+     armv7l: 'f6e98ae7fdd796945dfc130eb256ee9d1aafe9c7e6a15bcc63a2ba4d77640b62',
+       i686: '5e3c1391e1780632c7e71c0863528e17ff65bceef211e13d486ab672e373b3c6',
+     x86_64: '1aae1bf10b5fdbbdcdf5e5d04bdbab5e8e683486a8d7a569e79eee336fbb0755',
   })
 
+  depends_on 'eudev'
+
   def self.build
-    system "make", "PREFIX=/usr/local", "SHARED=yes"
+    system 'make',
+           "LIBDIR=#{CREW_LIB_PREFIX}",
+           'SBINDIR=$(PREFIX)/bin',
+           "PREFIX=#{CREW_PREFIX}",
+           'SHARED=yes',
+           'ZLIB=yes',
+           'DNS=yes'
   end
 
   def self.install
-    system "make", "DESTDIR=#{CREW_DEST_DIR}", "install"
+    system 'make',
+           "LIBDIR=#{CREW_LIB_PREFIX}",
+           "DESTDIR=#{CREW_DEST_DIR}",
+           'SBINDIR=$(PREFIX)/bin',
+           "PREFIX=#{CREW_PREFIX}",
+           'install-lib',
+           'SHARED=yes',
+           'ZLIB=yes',
+           'install',
+           'DNS=yes'
   end
 end

@@ -3,31 +3,29 @@ require 'package'
 class Libxdamage < Package
   description 'library for the X window system'
   homepage 'https://x.org'
-  version '1.1.4'
+  version '1.1.4-1'
   source_url 'https://www.x.org/archive/individual/lib/libXdamage-1.1.4.tar.gz'
   source_sha256 '4bb3e9d917f5f593df2277d452926ee6ad96de7b7cd1017cbcf4579fe5d3442b'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libxdamage-1.1.4-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libxdamage-1.1.4-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libxdamage-1.1.4-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libxdamage-1.1.4-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libxdamage-1.1.4-1-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libxdamage-1.1.4-1-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libxdamage-1.1.4-1-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libxdamage-1.1.4-1-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: 'c9abe9268a3ac340598e1b15665ac2bdf2b63eefce22028a0ccd51f23791f994',
-     armv7l: 'c9abe9268a3ac340598e1b15665ac2bdf2b63eefce22028a0ccd51f23791f994',
-       i686: 'e3a1ff3de3d2fdf105d12e13e9c053fd1c1a80433d96a521f3a23fdcc09bde13',
-     x86_64: '30d9a122648f4fbe8754ecdb67b00a6ca21e7e829f03b9652209f517e575c82e',
+    aarch64: 'efd0c9702116e4aec5cf5474d9b7d8e838baaf2c1b5990e4ad48290085f2b42d',
+     armv7l: 'efd0c9702116e4aec5cf5474d9b7d8e838baaf2c1b5990e4ad48290085f2b42d',
+       i686: '56d02bc914ca1fd84986ab5fbc00e63c7f704985d291ef52ef03358c51b67883',
+     x86_64: 'ec0c7da854f939617bb29730726f7488a0df1cc0bfb4fd96cbdf6e257890f678',
   })
 
-  depends_on 'fixesproto'
   depends_on 'libxfixes'
-  depends_on 'xextproto'
   depends_on 'libx11'
-  depends_on 'damageproto'
+
 
   def self.build
-    system "./configure"
+    system "./configure --prefix=#{CREW_PREFIX} --libdir=#{CREW_LIB_PREFIX}"
     system "make"
   end
 

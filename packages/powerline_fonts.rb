@@ -3,39 +3,38 @@ require 'package'
 class Powerline_fonts < Package
   description 'Patched fonts for Powerline users.'
   homepage 'https://github.com/powerline/fonts'
-  version '1.1'
-  source_url 'https://codeload.github.com/powerline/fonts/tar.gz/2015-12-04?dummy=/'
+  version '2015-12-04'
+  source_url 'https://github.com/powerline/fonts/archive/2015-12-04.tar.gz'
   source_sha256 '3a0b73abca6334b5e6bddefab67f6eb1b2fac1231817d95fc79126c8998c4844'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/powerline_fonts-1.1-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/powerline_fonts-1.1-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/powerline_fonts-1.1-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/powerline_fonts-1.1-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/powerline_fonts-2015-12-04-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/powerline_fonts-2015-12-04-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/powerline_fonts-2015-12-04-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/powerline_fonts-2015-12-04-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: '12dbb3c203ce8605b729a2782268ee564ac44dc0855820a57388e9cf7878b0b3',
-     armv7l: '12dbb3c203ce8605b729a2782268ee564ac44dc0855820a57388e9cf7878b0b3',
-       i686: '71722a9389f4e0cfa0efebdd588fc5497108d52fe887958a24a710c9f450bdee',
-     x86_64: 'd393b1c392bd70949bbc77aff791a52781aa044d9c8951eca442fc3b66d90246',
+    aarch64: 'f8a9f001b5e1fb43795a6f3c1ac430ae1a1cae8f192f43b416d694518fea8050',
+     armv7l: 'f8a9f001b5e1fb43795a6f3c1ac430ae1a1cae8f192f43b416d694518fea8050',
+       i686: '3c0ef20d744105d0e5c7a43f644c83986bfb1f5a90342115afe7730328482b68',
+     x86_64: 'ef0fbbbbafa3c82924d3547654d7456e64787b2847f996f6d946e0f05b3943b5',
   })
 
   def self.install
-    fonts = "#{CREW_DEST_DIR}/usr/local/share/fonts"
+    fonts = "#{CREW_DEST_PREFIX}/share/fonts"
     FileUtils.mkdir_p(fonts)
 
     Dir.glob('*').each do |f|
       FileUtils.mv(f, fonts) unless ["README.rst", "install.sh"].include? f
     end
 
-    home = "#{CREW_DEST_DIR}/home/chronos/user"
-    FileUtils.mkdir_p(home)
-    FileUtils.cd(home) do
+    FileUtils.mkdir_p("#{CREW_DEST_HOME}")
+    FileUtils.cd("#{CREW_DEST_HOME}") do
       File.open('.font.conf','w') do |f|
         f.puts "<?xml version=\"1.0\"?>"
         f.puts "<!DOCTYPE fontconfig SYSTEM \"fonts.dtd\">"
         f.puts "<fontconfig>"
-        f.puts "\t<dir>/usr/local/share/fonts</dir>"
+        f.puts "\t<dir>#{CREW_PREFIX}/share/fonts</dir>"
         f.puts "</fontconfig>"
       end
 

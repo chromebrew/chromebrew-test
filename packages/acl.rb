@@ -3,33 +3,34 @@ require 'package'
 class Acl < Package
   description 'Commands for Manipulating POSIX Access Control Lists.'
   homepage 'http://savannah.nongnu.org/projects/acl'
-  version '2.2.52'
-  source_url 'http://download.savannah.gnu.org/releases/acl/acl-2.2.52.src.tar.gz'
-  source_sha256 '179074bb0580c06c4b4137be4c5a92a701583277967acdb5546043c7874e0d23'
+  version '2.2.53'
+  source_url 'https://bigsearcher.com/mirrors/nongnu/acl/acl-2.2.53.tar.gz'
+  source_sha256 '06be9865c6f418d851ff4494e12406568353b891ffe1f596b34693c387af26c7'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/acl-2.2.52-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/acl-2.2.52-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/acl-2.2.52-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/acl-2.2.52-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/acl-2.2.53-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/acl-2.2.53-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/acl-2.2.53-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/acl-2.2.53-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: 'a5af9c618a1e8db3641b16b84680a852bbe9fa651b8097087b9b35279eb07a83',
-     armv7l: 'a5af9c618a1e8db3641b16b84680a852bbe9fa651b8097087b9b35279eb07a83',
-       i686: 'd12b8be543c92eb789d80abe09a84e8a9261410379bd23829d3dc7305aabe608',
-     x86_64: 'c883356b00cfa258cb3e62f9af734ac2a951e9f50faa6b244736f5c03f5662e7',
+    aarch64: '63d5600ce26933fc49b5fea4a9ab37f1dac8546c9a2bee6d0525ced6b98c03bb',
+     armv7l: '63d5600ce26933fc49b5fea4a9ab37f1dac8546c9a2bee6d0525ced6b98c03bb',
+       i686: 'a6859cfa0dc95c84304e49e90bbabc19f99a88daf962c58ff83914acd87f151e',
+     x86_64: '3dc686dbda7dd835281a0e9f54fb0740bd4fcb318c273bc78bbe75a402b906d9',
   })
 
   depends_on 'attr'
 
   def self.build
-    system './configure --prefix=/usr/local --libexecdir=/usr/local/lib --disable-static'
-    system 'make'
+    system "./configure",
+           "--prefix=#{CREW_PREFIX}",
+           "--libdir=#{CREW_LIB_PREFIX}",
+           "--disable-static"
+    system "make"
   end
 
   def self.install
     system "make", "DESTDIR=#{CREW_DEST_DIR}", "install"
-    system "make", "DESTDIR=#{CREW_DEST_DIR}", "install-dev"
-    system "make", "DESTDIR=#{CREW_DEST_DIR}", "install-lib"
   end
 end

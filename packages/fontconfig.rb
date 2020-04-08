@@ -3,31 +3,34 @@ require 'package'
 class Fontconfig < Package
   description 'Fontconfig is a library for configuring and customizing font access.'
   homepage 'https://www.freedesktop.org/software/fontconfig/front.html'
-  version '2.12.4'
-  source_url 'https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.4.tar.bz2'
-  source_sha256 '668293fcc4b3c59765cdee5cee05941091c0879edcc24dfec5455ef83912e45c'
+  version '2.13.0'
+  source_url 'https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.13.0.tar.gz'
+  source_sha256 'a6ca290637d8b2c4e1dd40549b179202977593f7481ec83ddfb1765ad90037ba'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/fontconfig-2.12.4-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/fontconfig-2.12.4-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/fontconfig-2.12.4-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/fontconfig-2.12.4-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/fontconfig-2.13.0-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/fontconfig-2.13.0-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/fontconfig-2.13.0-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/fontconfig-2.13.0-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: 'e9019600344fb674b24c24b78599cb9ad45f5b33cfd3d3e31c2a3b8c87895f67',
-     armv7l: 'e9019600344fb674b24c24b78599cb9ad45f5b33cfd3d3e31c2a3b8c87895f67',
-       i686: '0d970e13d571ebeb4963ed1b50d9943502117877b2e08168613a0e705bf48211',
-     x86_64: '96dd1f4f9b381f3670d706a7ab0ed83cb48d354f1a5690a22d24929655dbc7ef',
+    aarch64: 'ced3440f18ee896c1623ecd1ef3c493c41f6947ee4c6b4c54cd6bd23080e42ff',
+     armv7l: 'ced3440f18ee896c1623ecd1ef3c493c41f6947ee4c6b4c54cd6bd23080e42ff',
+       i686: '64a8085ac2a3cb30c1d523133778a868ece074fa973c5f7b0548b9b639f7ecb2',
+     x86_64: '7df51056ad09bf3b74fc1e85e6049306322f55641b191f3a8fa0378281c71702',
   })
 
   depends_on 'expat'
   depends_on 'gperf'
-  depends_on 'pkgconfig'
   depends_on 'freetype'
+  depends_on 'util_linux'
 
   def self.build
-      system './configure CFLAGS=" -fPIC" --localstatedir=/usr/local/cache'
-      system 'make'
+    system "./configure \
+            --prefix=#{CREW_PREFIX} \
+            --libdir=#{CREW_LIB_PREFIX} \
+            --localstatedir=#{CREW_PREFIX}/cache"
+    system 'make'
   end
 
   def self.install

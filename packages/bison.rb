@@ -3,39 +3,33 @@ require 'package'
 class Bison < Package
   description 'Bison is a general-purpose parser generator that converts an annotated context-free grammar into a deterministic LR or generalized LR (GLR) parser employing LALR(1) parser tables.'
   homepage 'http://www.gnu.org/software/bison/'
-  version '3.0.4-1'
-  source_url 'http://mirror.keystealth.org/gnu/bison/bison-3.0.4.tar.xz'
-  source_sha256 'a72428c7917bdf9fa93cb8181c971b6e22834125848cf1d03ce10b1bb0716fe1'
+  version '3.5.3'
+  source_url 'https://ftpmirror.gnu.org/gnu/bison/bison-3.5.3.tar.xz'
+  source_sha256 '2bf85b5f88a5f2fa8069aed2a2dfc3a9f8d15a97e59c713e3906e5fdd982a7c4'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/bison-3.0.4-1-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/bison-3.0.4-1-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/bison-3.0.4-1-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/bison-3.0.4-1-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/bison-3.5.3-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/bison-3.5.3-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/bison-3.5.3-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/bison-3.5.3-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: 'ede13d714d13f2d43f82aa31b14cda1f898dcffa220103bb2b25011433cbafb8',
-     armv7l: 'ede13d714d13f2d43f82aa31b14cda1f898dcffa220103bb2b25011433cbafb8',
-       i686: '295fd33c5b6b28fc78816f8f85a2f755ff398a846d15dec4bea72b7d1fcc037c',
-     x86_64: '68b57034c1e3bf65fdc55e4fb5d29e2a83178e855d909df77be261d8436e033a',
+    aarch64: '1ff70ed7db74cadbb20d0e17a6d631bd256caf3549c0932c347eba3edf1f2a53',
+     armv7l: '1ff70ed7db74cadbb20d0e17a6d631bd256caf3549c0932c347eba3edf1f2a53',
+       i686: '091fc0b760316ca632cce4240b1fa910c1528a953d1328d5edb5e05239a8e875',
+     x86_64: '1e810c55fec98830af9089b773150efdc5a1d9a9380bf885b4ae6bf8261111d9',
   })
-
-  depends_on 'diffutils' => :build
-  depends_on 'm4' => :build
-  depends_on 'perl' => :build
-  # `make check` requires flex, but it causes dependency loop.  so, commenting it out.
-  # depends_on 'flex' => :build
 
   def self.build
     system "./configure --prefix=#{CREW_PREFIX} --libdir=#{CREW_LIB_PREFIX}"
-    system "make"
+    system 'make'
   end
 
   def self.install
-    system "make", "DESTDIR=#{CREW_DEST_DIR}", "install"
+    system 'make', "DESTDIR=#{CREW_DEST_DIR}", 'install'
   end
 
   def self.check
-    system "make check"
+    system 'make check'
   end
 end

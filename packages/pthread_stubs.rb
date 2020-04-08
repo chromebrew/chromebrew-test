@@ -3,25 +3,25 @@ require 'package'
 class Pthread_stubs < Package
   description 'pthread stubs to get libX11 working'
   homepage 'https://x.org'
-  version '0.1'
-  source_url 'https://www.x.org/archive/individual/lib/libpthread-stubs-0.1.tar.gz'
-  source_sha256 'f8f7ca635fa54bcaef372fd5fd9028f394992a743d73453088fcadc1dbf3a704'
+  version '0.4'
+  source_url 'https://xcb.freedesktop.org/dist/libpthread-stubs-0.4.tar.bz2'
+  source_sha256 'e4d05911a3165d3b18321cc067fdd2f023f06436e391c6a28dff618a78d2e733'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/pthread_stubs-0.1-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/pthread_stubs-0.1-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/pthread_stubs-0.1-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/pthread_stubs-0.1-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/pthread_stubs-0.4-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/pthread_stubs-0.4-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/pthread_stubs-0.4-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/pthread_stubs-0.4-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: 'bb90a4b181cae20cdfeeb636092f4f4b1e4a63a8c1601310efc5058a4404302a',
-     armv7l: 'bb90a4b181cae20cdfeeb636092f4f4b1e4a63a8c1601310efc5058a4404302a',
-       i686: '821f2fbd827feb53a13d86a5161fca73930b2ae2c3b9c06104c52403e0729642',
-     x86_64: '9775808cf6699e3ff2457bb7f715c47d0287ecef15a8e02a1a832b5b0ebf5a21',
+    aarch64: '85fd777e81a2dd5e3954e82465291c2c889567b7ae8bbb7a3e51b196c8ed35dd',
+     armv7l: '85fd777e81a2dd5e3954e82465291c2c889567b7ae8bbb7a3e51b196c8ed35dd',
+       i686: '3fa0eb953101a37c924a22fa28699d1cb7e4a85bd79b7c492f087df91e108e42',
+     x86_64: '74d475f18422369cea3e5ca5591c55aa2caaac2ad23abaf17e5678daec534cf9',
   })
 
   def self.build
-    system "./configure"
+    system "./configure --prefix=#{CREW_PREFIX} --libdir=#{CREW_LIB_PREFIX}"
     system "make"
   end
 

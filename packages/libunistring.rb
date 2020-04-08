@@ -3,31 +3,39 @@ require 'package'
 class Libunistring < Package
   description 'A library that provides functions for manipulating Unicode strings and for manipulating C strings according to the Unicode standard.'
   homepage 'https://www.gnu.org/software/libunistring/'
-  version '0.9.7-1'
-  source_url 'http://ftp.gnu.org/gnu/libunistring/libunistring-0.9.7.tar.xz'
-  source_sha256 '2e3764512aaf2ce598af5a38818c0ea23dedf1ff5460070d1b6cee5c3336e797'
+  version '0.9.10'
+  source_url 'https://ftpmirror.gnu.org/libunistring/libunistring-0.9.10.tar.xz'
+  source_sha256 'eb8fb2c3e4b6e2d336608377050892b54c3c983b646c561836550863003c05d7'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libunistring-0.9.7-1-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libunistring-0.9.7-1-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libunistring-0.9.7-1-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libunistring-0.9.7-1-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libunistring-0.9.10-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libunistring-0.9.10-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libunistring-0.9.10-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libunistring-0.9.10-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: 'b60d772a35c8de2066092dbc1fab4fc85b89a90f2629b0f1048662f49d437a21',
-     armv7l: 'b60d772a35c8de2066092dbc1fab4fc85b89a90f2629b0f1048662f49d437a21',
-       i686: '6da6bd489e9e9dc6b18f3b3be5b29898495b159a65ec0190541d189e6cac06c3',
-     x86_64: '23b75c157f57f9dfbdc3cdfee48d1e1f612c674867679061b2c15b418bac6f82',
+    aarch64: 'bd3254d74558de91f176d933d0e4c71eb34b82e245abfbbce9fbee675e89e6fc',
+     armv7l: 'bd3254d74558de91f176d933d0e4c71eb34b82e245abfbbce9fbee675e89e6fc',
+       i686: '88cb3cbfdf6c108045cf63d5aa70b2d036fceacc93f0ead76858381db4268c76',
+     x86_64: 'd0fccb9b680e38517ce95483fcbac289ba835aa79e5c106bc21ec8de7872a13b',
   })
 
   depends_on 'glibc'
 
   def self.build
-    system "./configure", "--disable-static", "--prefix=#{CREW_PREFIX}", "--libdir=#{CREW_LIB_PREFIX}"
-    system "make"
+    system './configure',
+           "--prefix=#{CREW_PREFIX}",
+           "--libdir=#{CREW_LIB_PREFIX}",
+           '--disable-static',
+           '--enable-shared'
+    system 'make'
   end
 
   def self.install
     system "make", "DESTDIR=#{CREW_DEST_DIR}", "install"
+  end
+
+  def self.check
+    system "make", "check"
   end
 end

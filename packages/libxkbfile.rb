@@ -3,25 +3,25 @@ require 'package'
 class Libxkbfile < Package
   description 'library for the X window system'
   homepage 'https://x.org'
-  version '1.0.9'
-  source_url 'https://www.x.org/archive/individual/lib/libxkbfile-1.0.9.tar.gz'
-  source_sha256 '95df50570f38e720fb79976f603761ae6eff761613eb56f258c3cb6bab4fd5e3'
+  version '1.1.0'
+  source_url 'https://www.x.org/archive/individual/lib/libxkbfile-1.1.0.tar.bz2'
+  source_sha256 '758dbdaa20add2db4902df0b1b7c936564b7376c02a0acd1f2a331bd334b38c7'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libxkbfile-1.0.9-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libxkbfile-1.0.9-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libxkbfile-1.0.9-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libxkbfile-1.0.9-chromeos-x86_64.tar.xz',
+    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/libxkbfile-1.1.0-chromeos-armv7l.tar.xz',
+     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/libxkbfile-1.1.0-chromeos-armv7l.tar.xz',
+       i686: 'https://dl.bintray.com/chromebrew/chromebrew/libxkbfile-1.1.0-chromeos-i686.tar.xz',
+     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/libxkbfile-1.1.0-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: 'd222e905fd312dc413722efc44f18cbc1168896f08023cb04a90b7b6e065d67f',
-     armv7l: 'd222e905fd312dc413722efc44f18cbc1168896f08023cb04a90b7b6e065d67f',
-       i686: '046be4d7969829495ada6d9d3f830e97ca2b65cfb3783b7cbf41675988c020f2',
-     x86_64: '955ab05956064921cbc8add816de59af73493562a42d2853c8426852ac5eae04',
+    aarch64: '667eac3dcdb3e4c79531f3263a5c98696d41650c15bd9b478f80ff77bcbb67f0',
+     armv7l: '667eac3dcdb3e4c79531f3263a5c98696d41650c15bd9b478f80ff77bcbb67f0',
+       i686: 'c2d5729b30872dcaddd114cca044f91e30fc3a2dcdb9f16f5a4177c99a66dd66',
+     x86_64: 'c3e8e8a1c2d34c36ac75eab039ab0eaca01cedd5fe8406a582cc9bdd256fec63',
   })
 
   def self.build
-    system "./configure"
+    system "./configure --prefix=#{CREW_PREFIX} --libdir=#{CREW_LIB_PREFIX}"
     system "make"
   end
 

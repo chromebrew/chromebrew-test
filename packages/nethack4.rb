@@ -3,22 +3,17 @@ require 'package'
 class Nethack4 < Package
   description 'NetHack is a \'roguelike\' game following in the same tradition; the player controls an adventurer delving into a randomly generated dungeon to retrieve the Amulet of Yendor from its depths.'
   homepage 'http://nethack4.org/'
-  # "nethack4" fork of nethack with a few patches and a modern build system
-  version '4.3.0-beta2'
+  version '4.3.0-beta2-1'
   source_url 'http://nethack4.org/media/releases/nethack4-4.3-beta2.tar.gz'
   source_sha256 'b143a86b5e1baf55c663ae09c2663b169d265e95ac43154982296a1887d05f15'
 
   binary_url ({
-    aarch64: 'https://dl.bintray.com/chromebrew/chromebrew/nethack4-4.3.0-beta2-chromeos-armv7l.tar.xz',
-     armv7l: 'https://dl.bintray.com/chromebrew/chromebrew/nethack4-4.3.0-beta2-chromeos-armv7l.tar.xz',
-       i686: 'https://dl.bintray.com/chromebrew/chromebrew/nethack4-4.3.0-beta2-chromeos-i686.tar.xz',
-     x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/nethack4-4.3.0-beta2-chromeos-x86_64.tar.xz',
+      i686: 'https://dl.bintray.com/chromebrew/chromebrew/nethack4-4.3.0-beta2-1-chromeos-i686.tar.xz',
+    x86_64: 'https://dl.bintray.com/chromebrew/chromebrew/nethack4-4.3.0-beta2-1-chromeos-x86_64.tar.xz',
   })
   binary_sha256 ({
-    aarch64: 'b7c8e1b4bad569b52dfb8fbba4c4fb3b4c00aba47271ddd1ead52b5a772f720a',
-     armv7l: 'b7c8e1b4bad569b52dfb8fbba4c4fb3b4c00aba47271ddd1ead52b5a772f720a',
-       i686: 'fb5a00964bb65c957b72830ee228228fceae21051a6512a6b139529fb1dd9673',
-     x86_64: '1bf25169c0040001e2d3c4b0a9fedd5bd3d38c47735f7e3a5c2587e117e95b70',
+      i686: '6d350da249e839266caf16d1f1c67ea39bdf504eb078cdad727aad08581aecfa',
+    x86_64: 'f433701d17fb8ac9c1d6ab57f3038ae27e3fe3999ea00e821f296647f622ec99',
   })
 
   depends_on 'buildessential'
@@ -28,20 +23,36 @@ class Nethack4 < Package
   depends_on 'perl'
 
   def self.build
-    target="build"
-    system "mkdir -p " + target
-    Dir.chdir target  do
-      #build with rpath pointing at /usr/local
-      system "/usr/local/bin/perl ../aimake --config-only -i /usr/local/ --directory-layout=prefix --without=gui"
-      system "/usr/local/bin/perl ../aimake"
+    FileUtils.mkdir("build")
+    Dir.chdir("build") do
+      system "#{CREW_PREFIX}/bin/perl",
+             "../aimake",
+             "--config-only",
+             "--override-directory", "libdir=#{CREW_LIB_PREFIX}",
+             "--override-directory", "specificlibdir=#{CREW_LIB_PREFIX}",
+             "--override-directory", "staterootdir=#{CREW_PREFIX}/var",
+             "--override-directory", "gamesstatedir=#{CREW_PREFIX}/var/games/nethack4",
+             "--directory-layout=prefix",
+             "--destdir=#{CREW_DEST_DIR}",
+             "-i", "#{CREW_PREFIX}/",
+             "--without=gui"
+      system "#{CREW_PREFIX}/bin/perl",
+             "../aimake"
     end
   end
-
   def self.install
-    target="build"
-    Dir.chdir target  do
-      #install in destdir so package manager can keep track
-      system "/usr/local/bin/perl ../aimake --install-only -i #{CREW_DEST_DIR}/usr/local/ --directory-layout=prefix --without=gui"
+    Dir.chdir("build") do
+      system "#{CREW_PREFIX}/bin/perl",
+             "../aimake",
+             "--install-only",
+             "--override-directory", "libdir=#{CREW_LIB_PREFIX}",
+             "--override-directory", "specificlibdir=#{CREW_LIB_PREFIX}",
+             "--override-directory", "staterootdir=#{CREW_PREFIX}/var",
+             "--override-directory", "gamesstatedir=#{CREW_PREFIX}/var/games/nethack4",
+             "--directory-layout=prefix",
+             "--destdir=#{CREW_DEST_DIR}",
+             "-i", "#{CREW_PREFIX}/",
+             "--without=gui"
     end
   end
 end
